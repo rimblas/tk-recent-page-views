@@ -1,7 +1,7 @@
-# TK Recent Page Views
+# Recent Page Views
 
 ## What is this?
-The Recent Page Views module offers two features:
+The Recent Page Views module offers two features for your Oracle APEX applications:
 
 * Keep track of the most recent pages an application user has viewed.
 * Implement a User Viewing/Editing Warning (simplified record lock) notification.
