@@ -3,10 +3,14 @@
 ## What is this?
 The Recent Page Views module offers two features for your Oracle APEX applications:
 
-* Keep track of the most recent pages an application user has viewed.
-* Implement a User Viewing/Editing Warning (simplified record lock) notification.
+1. Keep track of the most recent pages an application user has viewed.
+2. Implement a User Viewing/Editing Warning (simplified record lock) notification.
 
 ![Recently Viewed & Viewing/Editing Warning](sample/recently_viewed.png)
+
+Here it is in action:
+
+![Recently Viewed & Viewing/Editing Animation](sample/tk-recent-views-demo.gif)
 
 ### Recent Pages
 Use this functionality to track the most recent pages and entities that user's view. Entities can be APEX pages or optionally an APEX page that edits/displays a particular record of data via a Primary Key.
