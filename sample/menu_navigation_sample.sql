@@ -28,7 +28,7 @@ order by seq, viewed_on desc, lvl
 
 create or replace view cw_main_tabs_v
 as
-with p as (select v('APP_ID') application_id, v('APP_PAGE_ID') app_page_id, v('APP_USER') app_user from dual)
+with p as (select nv('APP_ID') application_id, v('APP_PAGE_ID') app_page_id, v('APP_USER') app_user from dual)
 select 1 lvl
      , 'Home' label_value
      , 1 page_id
@@ -70,7 +70,8 @@ from cw_recent_views r
    , cw_claim_headers c
    , cw_clients cl
    , p
-where r.page_id = 210
+where r.application_id = p.application_id
+  and r.page_id = 210
   and r.view_user = p.app_user
   and r.entity_id = c.id
   and c.client_id = cl.id
@@ -101,7 +102,8 @@ select 2 lvl
 from cw_recent_views r
    , cw_clients_v c
    , p
-where r.page_id = 310
+where r.application_id = p.application_id
+  and r.page_id = 310
   and r.view_user = p.app_user
   and r.entity_id = c.client_id
 union all
@@ -131,7 +133,8 @@ select 2 lvl
 from cw_recent_views r
    , cw_providers prov
    , p
-where r.page_id = 365
+where r.application_id = p.application_id
+  and r.page_id = 365
   and r.view_user = p.app_user
   and r.entity_id = prov.id
 union all
@@ -161,7 +164,8 @@ select 2 lvl
 from cw_recent_views r
    , cw_cases_simple_v c
    , p
-where r.page_id = 810
+where r.application_id = p.application_id
+  and r.page_id = 810
   and r.view_user = p.app_user
   and r.entity_id = c.case_id
 union all
@@ -191,7 +195,8 @@ select 2 lvl
 from cw_recent_views r
    , cw_all_list_headers l
    , p
-where r.page_id = 620
+where r.application_id = p.application_id
+  and r.page_id = 620
   and r.view_user = p.app_user
   and r.entity_id = l.id
 union all
@@ -234,7 +239,8 @@ select 2 lvl
 from cw_recent_views r
    , cw_rules u
    , p
-where r.page_id = 510
+where r.application_id = p.application_id
+  and r.page_id = 510
   and r.view_user = p.app_user
   and r.entity_id = u.id
 union all
@@ -270,6 +276,7 @@ from cw_recent_views r
    , p
 where page.application_id = p.application_id
   and page.page_id = r.page_id
+  and r.application_id = p.application_id
   and r.page_id between 1001 and 4999
   and r.view_user = p.app_user
 /

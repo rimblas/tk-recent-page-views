@@ -4,6 +4,7 @@ package tk_recent_views_api as
 
 g_entity_pk  number;
 g_user       tk_recent_views.view_user%TYPE;
+g_app_id     number;
 
 --------------------------------------------------------------------------------
 --*
@@ -14,6 +15,14 @@ function user_recent_views(
   p_user in varchar2
 )
 return number;
+
+
+--------------------------------------------------------------------------------
+--*
+--*  Get the entity being looked at by a user
+--*
+--------------------------------------------------------------------------------
+function get_entity_pk return number;
 
 
 --------------------------------------------------------------------------------

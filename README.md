@@ -36,13 +36,34 @@ The included app uses the "Sample Application" table DEMO_PRODUCT_INFO and illus
 
 ## Config
 
-In order for the "Viewing/Editing Warning" functionality to work correctly you will need to configure and change `tk_recent_views_api.page_in_current_view` to indicate the pages you want warnings for.
+In order for the "Viewing/Editing Warning" functionality to work correctly you will need to indicate the pages you want warnings for. Insert `application_id` and `page_id` into `tk_current_view_tracking`
+
+For example, the demo app monitors users editing on p15:
+
+```
+insert into tk_current_view_tracking values(51769, 15);
+```
 
 The `c_interval` constant determines the duration used to give a user a warning that someone else is still "viewing" a record.
 
 ## Install
 
-Simply execute the "install.sql" script.
+Simply execute the "install.sql" script. Remmeber to insert into `tk_current_view_tracking`.
+
+
+## Upgrade
+
+If this is your first time installing, just run `install.sql`.
+
+If you're upgrading from a previous version, run `upgrade.sql`
+
+*IMPORTANT* Before running upgrade, add the correct prev_app_id for your application.
+
+v1.1.0 implements multi-application support. There two important changes.
+
+Add the pages that need to implment "Current View" tracking into `tk_current_view_tracking`.
+
+All your application or view references to `tk_recent_views` now need to be application specific.
 
 
 ## Real Life Examples
@@ -123,7 +144,8 @@ select 2 lvl
 from cw_recent_views r
    , cw_clients_v c
    , p
-where r.page_id = 310
+where r.application = p.application_id
+  and r.page_id = 310
   and r.view_user = p.app_user
   and r.entity_id = c.client_id
 union all
@@ -159,6 +181,7 @@ from cw_recent_views r
    , p
 where page.application_id = p.application_id
   and page.page_id = r.page_id
+  and r.application = p.application_id
   and r.page_id between 1001 and 4999
   and r.view_user = p.app_user
 /
@@ -189,7 +212,8 @@ Here is an example of how you may use the recently used entries:
 select p.product_name
 from tk_recent_views r
    , demo_product_info p
-where r.page_id = 15
+where r.application = :APP_ID
+  and r.page_id = 15
   and r.view_user = :APP_USER
   and r.entity_id = p.product_id
 order by viewed_on desc
@@ -210,7 +234,8 @@ Code:
 begin
   for u in (select view_user, viewed_on
               from tk_current_views
-             where page_id = :APP_PAGE_ID
+             where application_id = :APP_ID
+               and page_id = :APP_PAGE_ID
                and entity_id = tk_recent_views_api.g_entity_pk)
   loop
     htp.p('Viewed by ' || u.view_user || ' ' || apex_util.get_since(u.viewed_on) );

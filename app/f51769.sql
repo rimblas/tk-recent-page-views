@@ -1,3 +1,4 @@
+prompt --application/set_environment
 set define off verify off feedback off
 whenever sqlerror exit sql.sqlcode rollback
 --------------------------------------------------------------------------------
@@ -5,34 +6,33 @@ whenever sqlerror exit sql.sqlcode rollback
 -- ORACLE Application Express (APEX) export file
 --
 -- You should run the script connected to SQL*Plus as the Oracle user
--- APEX_050000 or as the owner (parsing schema) of the application.
+-- APEX_180200 or as the owner (parsing schema) of the application.
 --
 -- NOTE: Calls to apex_application_install override the defaults below.
 --
 --------------------------------------------------------------------------------
 begin
 wwv_flow_api.import_begin (
- p_version_yyyy_mm_dd=>'2013.01.01'
-,p_release=>'5.0.3.00.03'
-,p_default_workspace_id=>3899267116010088828
+ p_version_yyyy_mm_dd=>'2018.05.24'
+,p_release=>'18.2.0.00.12'
+,p_default_workspace_id=>1451328962282074
 ,p_default_application_id=>51769
-,p_default_owner=>'JMR'
+,p_default_owner=>'JORGE'
 );
 end;
 /
-prompt --application/set_environment
  
 prompt APPLICATION 51769 - Recent Views/Current Views
 --
 -- Application Export:
 --   Application:     51769
 --   Name:            Recent Views/Current Views
---   Date and Time:   22:34 Thursday March 10, 2016
---   Exported By:     JORGE@RIMBLAS.COM
+--   Date and Time:   12:29 Monday February 15, 2021
+--   Exported By:     JRIMBLAS
 --   Flashback:       0
 --   Export Type:     Application Export
---   Version:         5.0.3.00.03
---   Instance ID:     63113759365424
+--   Version:         18.2.0.00.12
+--   Instance ID:     248281563898386
 --
 
 -- Application Statistics:
@@ -64,6 +64,7 @@ prompt APPLICATION 51769 - Recent Views/Current Views
 --       Shortcuts:              1
 --     Globalization:
 --     Reports:
+--     E-Mail:
 --   Supporting Objects:  Included
 
 prompt --application/delete_application
@@ -71,17 +72,12 @@ begin
 wwv_flow_api.remove_flow(wwv_flow.g_flow_id);
 end;
 /
-prompt --application/ui_types
-begin
-null;
-end;
-/
 prompt --application/create_application
 begin
 wwv_flow_api.create_flow(
  p_id=>wwv_flow.g_flow_id
 ,p_display_id=>nvl(wwv_flow_application_install.get_application_id,51769)
-,p_owner=>nvl(wwv_flow_application_install.get_schema,'JMR')
+,p_owner=>nvl(wwv_flow_application_install.get_schema,'JORGE')
 ,p_name=>nvl(wwv_flow_application_install.get_application_name,'Recent Views/Current Views')
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'F_51769')
 ,p_page_view_logging=>'YES'
@@ -91,12 +87,15 @@ wwv_flow_api.create_flow(
 ,p_compatibility_mode=>'5.0'
 ,p_flow_language=>'en'
 ,p_flow_language_derived_from=>'0'
+,p_direction_right_to_left=>'N'
 ,p_flow_image_prefix => nvl(wwv_flow_application_install.get_image_prefix,'')
 ,p_authentication=>'PLUGIN'
 ,p_authentication_id=>wwv_flow_api.id(27570911634181648309)
+,p_populate_roles=>'A'
 ,p_application_tab_set=>0
 ,p_logo_image=>'TEXT:Recent Views/Current Views'
-,p_proxy_server=> nvl(wwv_flow_application_install.get_proxy,'')
+,p_proxy_server=>nvl(wwv_flow_application_install.get_proxy,'')
+,p_no_proxy_domains=>nvl(wwv_flow_application_install.get_no_proxy_domains,'')
 ,p_flow_version=>'release 1.0'
 ,p_flow_status=>'AVAILABLE_W_EDIT_LINK'
 ,p_exact_substitutions_only=>'Y'
@@ -104,14 +103,14 @@ wwv_flow_api.create_flow(
 ,p_browser_frame=>'D'
 ,p_rejoin_existing_sessions=>'N'
 ,p_csv_encoding=>'Y'
-,p_last_updated_by=>'JORGE@RIMBLAS.COM'
-,p_last_upd_yyyymmddhh24miss=>'20160310223406'
+,p_last_updated_by=>'JRIMBLAS'
+,p_last_upd_yyyymmddhh24miss=>'20210215122914'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_ui_type_name => null
 );
 end;
 /
-prompt --application/shared_components/navigation/lists
+prompt --application/shared_components/navigation/lists/desktop_navigation_menu
 begin
 wwv_flow_api.create_list(
  p_id=>wwv_flow_api.id(27570869058603648232)
@@ -135,6 +134,10 @@ wwv_flow_api.create_list_item(
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'10,15'
 );
+end;
+/
+prompt --application/shared_components/navigation/lists/desktop_navigation_bar
+begin
 wwv_flow_api.create_list(
  p_id=>wwv_flow_api.id(27570911308804648302)
 ,p_name=>'Desktop Navigation Bar'
@@ -149,19 +152,38 @@ wwv_flow_api.create_list_item(
 );
 end;
 /
-prompt --application/shared_components/files
-begin
-null;
-end;
-/
 prompt --application/plugin_settings
 begin
+wwv_flow_api.create_plugin_setting(
+ p_id=>wwv_flow_api.id(15112259037496028)
+,p_plugin_type=>'ITEM TYPE'
+,p_plugin=>'NATIVE_COLOR_PICKER'
+,p_attribute_01=>'classic'
+);
+wwv_flow_api.create_plugin_setting(
+ p_id=>wwv_flow_api.id(15112357640496034)
+,p_plugin_type=>'ITEM TYPE'
+,p_plugin=>'NATIVE_RICH_TEXT_EDITOR'
+,p_attribute_01=>'N'
+);
+wwv_flow_api.create_plugin_setting(
+ p_id=>wwv_flow_api.id(15112413007496035)
+,p_plugin_type=>'REGION TYPE'
+,p_plugin=>'NATIVE_IR'
+,p_attribute_01=>'LEGACY'
+);
+wwv_flow_api.create_plugin_setting(
+ p_id=>wwv_flow_api.id(15112729282496041)
+,p_plugin_type=>'REGION TYPE'
+,p_plugin=>'NATIVE_IG'
+);
 wwv_flow_api.create_plugin_setting(
  p_id=>wwv_flow_api.id(27570868710948648232)
 ,p_plugin_type=>'ITEM TYPE'
 ,p_plugin=>'NATIVE_YES_NO'
 ,p_attribute_01=>'Y'
 ,p_attribute_03=>'N'
+,p_attribute_05=>'SELECT_LIST'
 );
 wwv_flow_api.create_plugin_setting(
  p_id=>wwv_flow_api.id(27570868868468648232)
@@ -176,17 +198,7 @@ wwv_flow_api.create_plugin_setting(
 );
 end;
 /
-prompt --application/shared_components/security/authorizations
-begin
-null;
-end;
-/
 prompt --application/shared_components/navigation/navigation_bar
-begin
-null;
-end;
-/
-prompt --application/shared_components/logic/application_processes
 begin
 null;
 end;
@@ -201,22 +213,17 @@ begin
 null;
 end;
 /
+prompt --application/shared_components/logic/application_settings
+begin
+null;
+end;
+/
 prompt --application/shared_components/navigation/tabs/standard
 begin
 null;
 end;
 /
 prompt --application/shared_components/navigation/tabs/parent
-begin
-null;
-end;
-/
-prompt --application/shared_components/user_interface/lovs
-begin
-null;
-end;
-/
-prompt --application/shared_components/navigation/trees
 begin
 null;
 end;
@@ -260,15 +267,16 @@ wwv_flow_api.create_menu_option(
 );
 end;
 /
-prompt --application/shared_components/user_interface/templates/page
+prompt --application/shared_components/user_interface/templates/page/left_side_column
 begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570869107858648233)
 ,p_theme_id=>42
 ,p_name=>'Left Side Column'
+,p_internal_name=>'LEFT_SIDE_COLUMN'
 ,p_is_popup=>false
 ,p_javascript_code_onload=>'apex.theme42.initializePage.leftSideCol();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -310,7 +318,7 @@ wwv_flow_api.create_template(
 '    #REGION_POSITION_06#',
 '  </div>',
 '</header>'))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body">',
 '#SIDE_GLOBAL_NAVIGATION_LIST#',
 '  <div class="t-Body-main">',
@@ -337,7 +345,7 @@ wwv_flow_api.create_template(
 '<div class="t-Body-inlineDialogs">',
 '  #REGION_POSITION_04#',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -349,7 +357,7 @@ wwv_flow_api.create_template(
 '#GENERATED_JAVASCRIPT#',
 '</body>',
 '</html>'))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -367,7 +375,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -385,7 +393,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_navigation_bar=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navigation_bar=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<ul class="t-NavigationBar" data-mode="classic">',
 '  <li class="t-NavigationBar-item">',
 '    <span class="t-Button t-Button--icon t-Button--noUI t-Button--header t-Button--navBar t-Button--headerUser">',
@@ -394,7 +402,7 @@ wwv_flow_api.create_template(
 '    </span>',
 '  </li>#BAR_BODY#',
 '</ul>'))
-,p_navbar_entry=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navbar_entry=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item">',
 '  <a class="t-Button t-Button--icon t-Button--header t-Button--navBar" href="#LINK#">',
 '      <span class="t-Icon #IMAGE#"></span>',
@@ -404,7 +412,7 @@ wwv_flow_api.create_template(
 ,p_region_table_cattributes=>' summary="" cellpadding="0" border="0" cellspacing="0" width="100%"'
 ,p_breadcrumb_def_reg_pos=>'REGION_POSITION_01'
 ,p_theme_class_id=>17
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -430,15 +438,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -519,13 +527,18 @@ wwv_flow_api.create_page_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/page/left_and_right_side_columns
+begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570870050714648235)
 ,p_theme_id=>42
 ,p_name=>'Left and Right Side Columns'
+,p_internal_name=>'LEFT_AND_RIGHT_SIDE_COLUMNS'
 ,p_is_popup=>false
 ,p_javascript_code_onload=>'apex.theme42.initializePage.bothSideCols();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -567,7 +580,7 @@ wwv_flow_api.create_template(
 '    #REGION_POSITION_06#',
 '  </div>',
 '</header>'))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body">',
 '#SIDE_GLOBAL_NAVIGATION_LIST#',
 '  <div class="t-Body-main">',
@@ -600,7 +613,7 @@ wwv_flow_api.create_template(
 '<div class="t-Body-inlineDialogs">',
 '  #REGION_POSITION_04#',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -612,7 +625,7 @@ wwv_flow_api.create_template(
 '#GENERATED_JAVASCRIPT#',
 '</body>',
 '</html>'))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -630,7 +643,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -648,7 +661,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_navigation_bar=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navigation_bar=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<ul class="t-NavigationBar" data-mode="classic">',
 '  <li class="t-NavigationBar-item">',
 '    <span class="t-Button t-Button--icon t-Button--noUI t-Button--header t-Button--navBar t-Button--headerUser">',
@@ -657,7 +670,7 @@ wwv_flow_api.create_template(
 '    </span>',
 '  </li>#BAR_BODY#',
 '</ul>'))
-,p_navbar_entry=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navbar_entry=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item">',
 '  <a class="t-Button t-Button--icon t-Button--header t-Button--navBar" href="#LINK#">',
 '      <span class="t-Icon #IMAGE#"></span>',
@@ -668,7 +681,7 @@ wwv_flow_api.create_template(
 ,p_sidebar_def_reg_pos=>'REGION_POSITION_03'
 ,p_breadcrumb_def_reg_pos=>'REGION_POSITION_01'
 ,p_theme_class_id=>17
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -694,15 +707,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -792,13 +805,18 @@ wwv_flow_api.create_page_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/page/login
+begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570871051605648236)
 ,p_theme_id=>42
 ,p_name=>'Login'
+,p_internal_name=>'LOGIN'
 ,p_is_popup=>false
 ,p_javascript_code_onload=>'apex.theme42.initializePage.appLogin();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!doctype html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -822,7 +840,7 @@ wwv_flow_api.create_template(
 '</head>',
 '<body class="t-PageBody--login no-anim #PAGE_CSS_CLASSES#" #ONLOAD#>',
 '#FORM_OPEN#'))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body">',
 '  #REGION_POSITION_01#',
 '  #SUCCESS_MESSAGE##NOTIFICATION_MESSAGE##GLOBAL_NOTIFICATION#',
@@ -834,7 +852,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -846,7 +864,7 @@ wwv_flow_api.create_template(
 '#GENERATED_JAVASCRIPT#',
 '</body>',
 '</html>'))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -864,7 +882,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -885,7 +903,7 @@ wwv_flow_api.create_template(
 ,p_region_table_cattributes=>' summary="" cellpadding="0" border="0" cellspacing="0" width="100%"'
 ,p_breadcrumb_def_reg_pos=>'REGION_POSITION_01'
 ,p_theme_class_id=>6
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -911,15 +929,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -949,13 +967,18 @@ wwv_flow_api.create_page_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/page/master_detail
+begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570871316908648236)
 ,p_theme_id=>42
 ,p_name=>'Master Detail'
+,p_internal_name=>'MASTER_DETAIL'
 ,p_is_popup=>false
 ,p_javascript_code_onload=>'apex.theme42.initializePage.masterDetail();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -997,7 +1020,7 @@ wwv_flow_api.create_template(
 '    #REGION_POSITION_06#',
 '  </div>',
 '</header>'))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body">',
 '#SIDE_GLOBAL_NAVIGATION_LIST#',
 '  <div class="t-Body-main">',
@@ -1030,7 +1053,7 @@ wwv_flow_api.create_template(
 '<div class="t-Body-inlineDialogs">',
 '  #REGION_POSITION_04#',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -1042,7 +1065,7 @@ wwv_flow_api.create_template(
 '#GENERATED_JAVASCRIPT#',
 '</body>',
 '</html>'))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -1060,7 +1083,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -1078,7 +1101,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_navigation_bar=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navigation_bar=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<ul class="t-NavigationBar" data-mode="classic">',
 '  <li class="t-NavigationBar-item">',
 '    <span class="t-Button t-Button--icon t-Button--noUI t-Button--header t-Button--navBar t-Button--headerUser">',
@@ -1087,7 +1110,7 @@ wwv_flow_api.create_template(
 '    </span>',
 '  </li>#BAR_BODY#',
 '</ul>'))
-,p_navbar_entry=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navbar_entry=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item">',
 '  <a class="t-Button t-Button--icon t-Button--header t-Button--navBar" href="#LINK#">',
 '      <span class="t-Icon #IMAGE#"></span>',
@@ -1098,7 +1121,7 @@ wwv_flow_api.create_template(
 ,p_sidebar_def_reg_pos=>'REGION_POSITION_03'
 ,p_breadcrumb_def_reg_pos=>'REGION_POSITION_01'
 ,p_theme_class_id=>17
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -1124,15 +1147,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -1145,9 +1168,6 @@ wwv_flow_api.create_template(
 ,p_reference_id=>1996914646461572319
 ,p_translate_this_template=>'N'
 );
-end;
-/
-begin
 wwv_flow_api.create_page_tmpl_display_point(
  p_id=>wwv_flow_api.id(27570871426817648236)
 ,p_page_template_id=>wwv_flow_api.id(27570871316908648236)
@@ -1224,13 +1244,18 @@ wwv_flow_api.create_page_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/page/minimal_no_navigation
+begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570872377461648237)
 ,p_theme_id=>42
 ,p_name=>'Minimal (No Navigation)'
+,p_internal_name=>'MINIMAL_NO_NAVIGATION'
 ,p_is_popup=>false
 ,p_javascript_code_onload=>'apex.theme42.initializePage.noSideCol();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -1269,7 +1294,7 @@ wwv_flow_api.create_template(
 '  </div>',
 '</header>',
 '    '))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body">',
 '  <div class="t-Body-main">',
 '      <div class="t-Body-title" id="t_Body_title">',
@@ -1292,7 +1317,7 @@ wwv_flow_api.create_template(
 '<div class="t-Body-inlineDialogs">',
 '  #REGION_POSITION_04#',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -1305,7 +1330,7 @@ wwv_flow_api.create_template(
 '</body>',
 '</html>',
 ''))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -1323,7 +1348,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -1341,7 +1366,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_navigation_bar=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navigation_bar=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<ul class="t-NavigationBar t-NavigationBar--classic" data-mode="classic">',
 '  <li class="t-NavigationBar-item">',
 '    <span class="t-Button t-Button--icon t-Button--noUI t-Button--header t-Button--navBar t-Button--headerUser">',
@@ -1350,7 +1375,7 @@ wwv_flow_api.create_template(
 '    </span>',
 '  </li>#BAR_BODY#',
 '</ul>'))
-,p_navbar_entry=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navbar_entry=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item">',
 '  <a class="t-Button t-Button--icon t-Button--header" href="#LINK#">',
 '      <span class="t-Icon #IMAGE#"></span>',
@@ -1360,7 +1385,7 @@ wwv_flow_api.create_template(
 ,p_region_table_cattributes=>' summary="" cellpadding="0" border="0" cellspacing="0" width="100%"'
 ,p_breadcrumb_def_reg_pos=>'REGION_POSITION_01'
 ,p_theme_class_id=>4
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -1386,15 +1411,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -1466,13 +1491,18 @@ wwv_flow_api.create_page_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/page/modal_dialog
+begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570873140343648237)
 ,p_theme_id=>42
 ,p_name=>'Modal Dialog'
+,p_internal_name=>'MODAL_DIALOG'
 ,p_is_popup=>true
 ,p_javascript_code_onload=>'apex.theme42.initializePage.modalDialog();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -1496,7 +1526,7 @@ wwv_flow_api.create_template(
 '</head>',
 '<body class="t-Dialog-page #DIALOG_CSS_CLASSES# #PAGE_CSS_CLASSES#" #ONLOAD#>',
 '#FORM_OPEN#'))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Dialog" role="dialog" aria-label="#TITLE#">',
 '  <div class="t-Dialog-wrapper">',
 '    <div class="t-Dialog-header">',
@@ -1511,7 +1541,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -1523,7 +1553,7 @@ wwv_flow_api.create_template(
 '#GENERATED_JAVASCRIPT#',
 '</body>',
 '</html>'))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -1541,7 +1571,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -1562,7 +1592,7 @@ wwv_flow_api.create_template(
 ,p_region_table_cattributes=>' summary="" cellpadding="0" border="0" cellspacing="0" width="100%"'
 ,p_breadcrumb_def_reg_pos=>'REGION_POSITION_01'
 ,p_theme_class_id=>3
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -1588,15 +1618,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -1638,13 +1668,18 @@ wwv_flow_api.create_page_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/page/right_side_column
+begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570873598554648238)
 ,p_theme_id=>42
 ,p_name=>'Right Side Column'
+,p_internal_name=>'RIGHT_SIDE_COLUMN'
 ,p_is_popup=>false
 ,p_javascript_code_onload=>'apex.theme42.initializePage.rightSideCol();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -1686,7 +1721,7 @@ wwv_flow_api.create_template(
 '    #REGION_POSITION_06#',
 '  </div>',
 '</header>'))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body">',
 '#SIDE_GLOBAL_NAVIGATION_LIST#',
 '  <div class="t-Body-main">',
@@ -1716,7 +1751,7 @@ wwv_flow_api.create_template(
 '<div class="t-Body-inlineDialogs">',
 '  #REGION_POSITION_04#',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -1728,7 +1763,7 @@ wwv_flow_api.create_template(
 '#GENERATED_JAVASCRIPT#',
 '</body>',
 '</html>'))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -1746,7 +1781,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -1764,7 +1799,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_navigation_bar=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navigation_bar=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<ul class="t-NavigationBar" data-mode="classic">',
 '  <li class="t-NavigationBar-item">',
 '    <span class="t-Button t-Button--icon t-Button--noUI t-Button--header t-Button--navBar t-Button--headerUser">',
@@ -1773,7 +1808,7 @@ wwv_flow_api.create_template(
 '    </span>',
 '  </li>#BAR_BODY#',
 '</ul>'))
-,p_navbar_entry=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navbar_entry=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item">',
 '  <a class="t-Button t-Button--icon t-Button--header t-Button--navBar" href="#LINK#">',
 '      <span class="t-Icon #IMAGE#"></span>',
@@ -1784,7 +1819,7 @@ wwv_flow_api.create_template(
 ,p_sidebar_def_reg_pos=>'REGION_POSITION_03'
 ,p_breadcrumb_def_reg_pos=>'REGION_POSITION_01'
 ,p_theme_class_id=>17
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -1810,15 +1845,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -1899,13 +1934,18 @@ wwv_flow_api.create_page_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/page/standard
+begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570874433054648238)
 ,p_theme_id=>42
 ,p_name=>'Standard'
+,p_internal_name=>'STANDARD'
 ,p_is_popup=>false
 ,p_javascript_code_onload=>'apex.theme42.initializePage.noSideCol();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -1948,7 +1988,7 @@ wwv_flow_api.create_template(
 '  </div>',
 '</header>',
 '    '))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body">',
 '  #SIDE_GLOBAL_NAVIGATION_LIST#',
 '  <div class="t-Body-main">',
@@ -1972,7 +2012,7 @@ wwv_flow_api.create_template(
 '<div class="t-Body-inlineDialogs">',
 '  #REGION_POSITION_04#',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -1985,7 +2025,7 @@ wwv_flow_api.create_template(
 '</body>',
 '</html>',
 ''))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -2003,7 +2043,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -2021,7 +2061,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_navigation_bar=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navigation_bar=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<ul class="t-NavigationBar t-NavigationBar--classic" data-mode="classic">',
 '  <li class="t-NavigationBar-item">',
 '    <span class="t-Button t-Button--icon t-Button--noUI t-Button--header t-Button--navBar t-Button--headerUser">',
@@ -2030,7 +2070,7 @@ wwv_flow_api.create_template(
 '    </span>',
 '  </li>#BAR_BODY#',
 '</ul>'))
-,p_navbar_entry=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_navbar_entry=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item">',
 '  <a class="t-Button t-Button--icon t-Button--header" href="#LINK#">',
 '      <span class="t-Icon #IMAGE#"></span>',
@@ -2040,7 +2080,7 @@ wwv_flow_api.create_template(
 ,p_region_table_cattributes=>' summary="" cellpadding="0" border="0" cellspacing="0" width="100%"'
 ,p_breadcrumb_def_reg_pos=>'REGION_POSITION_01'
 ,p_theme_class_id=>1
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -2066,15 +2106,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -2087,9 +2127,6 @@ wwv_flow_api.create_template(
 ,p_reference_id=>4070909157481059304
 ,p_translate_this_template=>'N'
 );
-end;
-/
-begin
 wwv_flow_api.create_page_tmpl_display_point(
  p_id=>wwv_flow_api.id(27570874542833648239)
 ,p_page_template_id=>wwv_flow_api.id(27570874433054648238)
@@ -2149,13 +2186,18 @@ wwv_flow_api.create_page_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>false
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/page/wizard_modal_dialog
+begin
 wwv_flow_api.create_template(
  p_id=>wwv_flow_api.id(27570875268276648239)
 ,p_theme_id=>42
 ,p_name=>'Wizard Modal Dialog'
+,p_internal_name=>'WIZARD_MODAL_DIALOG'
 ,p_is_popup=>true
 ,p_javascript_code_onload=>'apex.theme42.initializePage.wizardModal();'
-,p_header_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_header_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<meta http-equiv="x-ua-compatible" content="IE=edge" />',
 '',
@@ -2179,7 +2221,7 @@ wwv_flow_api.create_template(
 '</head>',
 '<body class="t-Dialog-page #DIALOG_CSS_CLASSES# #PAGE_CSS_CLASSES#" #ONLOAD#>',
 '#FORM_OPEN#'))
-,p_box=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_box=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Dialog" role="dialog" aria-label="#TITLE#">',
 '  <div class="t-Wizard t-Wizard--modal">',
 '    <div class=" t-Wizard-steps">',
@@ -2194,7 +2236,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_footer_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_footer_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#FORM_CLOSE#',
 '#DEVELOPER_TOOLBAR#',
 '#APEX_JAVASCRIPT#',
@@ -2206,7 +2248,7 @@ wwv_flow_api.create_template(
 '#GENERATED_JAVASCRIPT#',
 '</body>',
 '</html>'))
-,p_success_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_success_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -2224,7 +2266,7 @@ wwv_flow_api.create_template(
 '    </div>',
 '  </div>',
 '</div>'))
-,p_notification_message=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_notification_message=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-alert">',
 '  <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="alert">',
 '    <div class="t-Alert-wrap">',
@@ -2244,7 +2286,7 @@ wwv_flow_api.create_template(
 '</div>'))
 ,p_region_table_cattributes=>' summary="" cellpadding="0" border="0" cellspacing="0" width="100%"'
 ,p_theme_class_id=>3
-,p_error_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_error_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -2270,15 +2312,15 @@ wwv_flow_api.create_template(
 ,p_grid_emit_empty_leading_cols=>true
 ,p_grid_emit_empty_trail_cols=>false
 ,p_grid_default_label_col_span=>3
-,p_grid_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="container">',
 '#ROWS#',
 '</div>'))
-,p_grid_row_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_row_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="row">',
 '#COLUMNS#',
 '</div>'))
-,p_grid_column_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_grid_column_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES#" #ATTRIBUTES#>',
 '#CONTENT#',
 '</div>'))
@@ -2322,11 +2364,12 @@ wwv_flow_api.create_page_tmpl_display_point(
 );
 end;
 /
-prompt --application/shared_components/user_interface/templates/button
+prompt --application/shared_components/user_interface/templates/button/icon
 begin
 wwv_flow_api.create_button_templates(
  p_id=>wwv_flow_api.id(27570906184946648276)
 ,p_template_name=>'Icon'
+,p_internal_name=>'ICON'
 ,p_template=>'<button class="t-Button t-Button--noLabel t-Button--icon #BUTTON_CSS_CLASSES#" #BUTTON_ATTRIBUTES# onclick="#JAVASCRIPT#" type="button" id="#BUTTON_ID#" title="#LABEL#" aria-label="#LABEL#"><span class="t-Icon #ICON_CSS_CLASSES#" aria-hidden="true"><'
 ||'/span></button>'
 ,p_hot_template=>'<button class="t-Button t-Button--noLabel t-Button--icon #BUTTON_CSS_CLASSES# t-Button--hot" #BUTTON_ATTRIBUTES# onclick="#JAVASCRIPT#" type="button" id="#BUTTON_ID#" title="#LABEL#" aria-label="#LABEL#"><span class="t-Icon #ICON_CSS_CLASSES#" aria-h'
@@ -2336,9 +2379,14 @@ wwv_flow_api.create_button_templates(
 ,p_theme_class_id=>5
 ,p_theme_id=>42
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/button/text
+begin
 wwv_flow_api.create_button_templates(
  p_id=>wwv_flow_api.id(27570906235914648277)
 ,p_template_name=>'Text'
+,p_internal_name=>'TEXT'
 ,p_template=>'<button onclick="#JAVASCRIPT#" class="t-Button #BUTTON_CSS_CLASSES#" type="button" #BUTTON_ATTRIBUTES# id="#BUTTON_ID#"><span class="t-Button-label">#LABEL#</span></button>'
 ,p_hot_template=>'<button onclick="#JAVASCRIPT#" class="t-Button t-Button--hot #BUTTON_CSS_CLASSES#" type="button" #BUTTON_ATTRIBUTES# id="#BUTTON_ID#"><span class="t-Button-label">#LABEL#</span></button>'
 ,p_reference_id=>4070916158035059322
@@ -2346,9 +2394,14 @@ wwv_flow_api.create_button_templates(
 ,p_theme_class_id=>1
 ,p_theme_id=>42
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/button/text_with_icon
+begin
 wwv_flow_api.create_button_templates(
  p_id=>wwv_flow_api.id(27570906396307648277)
 ,p_template_name=>'Text with Icon'
+,p_internal_name=>'TEXT_WITH_ICON'
 ,p_template=>'<button class="t-Button t-Button--icon #BUTTON_CSS_CLASSES#" #BUTTON_ATTRIBUTES# onclick="#JAVASCRIPT#" type="button" id="#BUTTON_ID#"><span class="t-Icon t-Icon--left #ICON_CSS_CLASSES#" aria-hidden="true"></span><span class="t-Button-label">#LABEL#'
 ||'</span><span class="t-Icon t-Icon--right #ICON_CSS_CLASSES#" aria-hidden="true"></span></button>'
 ,p_hot_template=>'<button class="t-Button t-Button--icon #BUTTON_CSS_CLASSES# t-Button--hot" #BUTTON_ATTRIBUTES# onclick="#JAVASCRIPT#" type="button" id="#BUTTON_ID#"><span class="t-Icon t-Icon--left #ICON_CSS_CLASSES#" aria-hidden="true"></span><span class="t-Button-'
@@ -2361,12 +2414,12 @@ wwv_flow_api.create_button_templates(
 );
 end;
 /
-prompt --application/shared_components/user_interface/templates/region
+prompt --application/shared_components/user_interface/templates/region/alert
 begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570875648508648239)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert #REGION_CSS_CLASSES#" id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES# role="group" aria-labelledby="#REGION_STATIC_ID#_heading">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -2384,6 +2437,7 @@ wwv_flow_api.create_plug_template(
 '  </div>',
 '</div>'))
 ,p_page_plug_template_name=>'Alert'
+,p_internal_name=>'ALERT'
 ,p_plug_table_bgcolor=>'#ffffff'
 ,p_theme_id=>42
 ,p_theme_class_id=>21
@@ -2405,14 +2459,19 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_glv_new_row=>true
 ,p_max_fixed_grid_columns=>12
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/blank_with_attributes
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570877171351648247)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES# class="#REGION_CSS_CLASSES#"> ',
 '#PREVIOUS##BODY##SUB_REGIONS##NEXT#',
 '</div>'))
 ,p_page_plug_template_name=>'Blank with Attributes'
+,p_internal_name=>'BLANK_WITH_ATTRIBUTES'
 ,p_theme_id=>42
 ,p_theme_class_id=>7
 ,p_default_label_alignment=>'RIGHT'
@@ -2420,10 +2479,14 @@ wwv_flow_api.create_plug_template(
 ,p_reference_id=>4499993862448380551
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/buttons_container
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570877290168648248)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-ButtonRegion t-Form--floatLeft #REGION_CSS_CLASSES#" id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES# role="group" aria-labelledby="#REGION_STATIC_ID#_heading">',
 '  <div class="t-ButtonRegion-wrap">',
 '    <div class="t-ButtonRegion-col t-ButtonRegion-col--left"><div class="t-ButtonRegion-buttons">#PREVIOUS##DELETE##CLOSE#</div></div>',
@@ -2436,6 +2499,7 @@ wwv_flow_api.create_plug_template(
 '  </div>',
 '</div>'))
 ,p_page_plug_template_name=>'Buttons Container'
+,p_internal_name=>'BUTTONS_CONTAINER'
 ,p_plug_table_bgcolor=>'#ffffff'
 ,p_theme_id=>42
 ,p_theme_class_id=>17
@@ -2465,10 +2529,14 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_glv_new_row=>true
 ,p_max_fixed_grid_columns=>12
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/carousel_container
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570878138566648248)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Region t-Region--carousel #REGION_CSS_CLASSES#" id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES# role="group" aria-labelledby="#REGION_STATIC_ID#_heading">',
 ' <div class="t-Region-header">',
 '  <div class="t-Region-headerItems t-Region-headerItems--title">',
@@ -2493,11 +2561,12 @@ wwv_flow_api.create_plug_template(
 '   </div>',
 ' </div>',
 '</div>'))
-,p_sub_plug_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_sub_plug_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div data-label="#SUB_REGION_TITLE#" id="SR_#SUB_REGION_ID#">',
 '  #SUB_REGION#',
 '</div>'))
 ,p_page_plug_template_name=>'Carousel Container'
+,p_internal_name=>'CAROUSEL_CONTAINER'
 ,p_plug_table_bgcolor=>'#ffffff'
 ,p_theme_id=>42
 ,p_theme_class_id=>5
@@ -2528,10 +2597,14 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_glv_new_row=>true
 ,p_max_fixed_grid_columns=>12
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/collapsible
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570881540171648251)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Region t-Region--hideShow #REGION_CSS_CLASSES#" id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES#>',
 ' <div class="t-Region-header">',
 '  <div class="t-Region-headerItems  t-Region-headerItems--controls">',
@@ -2560,6 +2633,7 @@ wwv_flow_api.create_plug_template(
 ' </div>',
 '</div>'))
 ,p_page_plug_template_name=>'Collapsible'
+,p_internal_name=>'COLLAPSIBLE'
 ,p_plug_table_bgcolor=>'#ffffff'
 ,p_theme_id=>42
 ,p_theme_class_id=>1
@@ -2590,10 +2664,14 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_glv_new_row=>true
 ,p_max_fixed_grid_columns=>12
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/hero
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570883636371648253)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-HeroRegion #REGION_CSS_CLASSES#" id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES#>',
 '  <div class="t-HeroRegion-wrap">',
 '    <div class="t-HeroRegion-col t-HeroRegion-col--left"><span class="t-HeroRegion-icon t-Icon #ICON_CSS_CLASSES#"></span></div>',
@@ -2605,6 +2683,7 @@ wwv_flow_api.create_plug_template(
 '  </div>',
 '</div>'))
 ,p_page_plug_template_name=>'Hero'
+,p_internal_name=>'HERO'
 ,p_theme_id=>42
 ,p_theme_class_id=>22
 ,p_default_label_alignment=>'RIGHT'
@@ -2620,10 +2699,14 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/inline_dialog
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570883878773648253)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div id="#REGION_STATIC_ID#_parent">',
 '<div id="#REGION_STATIC_ID#"  class="t-DialogRegion #REGION_CSS_CLASSES# js-regionDialog" #REGION_ATTRIBUTES# style="display:none" title="#TITLE#">',
 '  <div class="t-DialogRegion-body js-regionDialog-body">',
@@ -2640,6 +2723,7 @@ wwv_flow_api.create_plug_template(
 '</div>',
 '</div>'))
 ,p_page_plug_template_name=>'Inline Dialog'
+,p_internal_name=>'INLINE_DIALOG'
 ,p_theme_id=>42
 ,p_theme_class_id=>24
 ,p_default_template_options=>'js-modal:js-draggable:js-resizable'
@@ -2657,15 +2741,20 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_has_grid_support=>true
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/interactive_report
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570884709085648254)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES# class="t-IRR-region #REGION_CSS_CLASSES#" role="group" aria-labelledby="#REGION_STATIC_ID#_heading">',
 '  <h2 class="u-VisuallyHidden" id="#REGION_STATIC_ID#_heading">#TITLE#</h2>',
 '#PREVIOUS##BODY##SUB_REGIONS##NEXT#',
 '</div>'))
 ,p_page_plug_template_name=>'Interactive Report'
+,p_internal_name=>'INTERACTIVE_REPORT'
 ,p_theme_id=>42
 ,p_theme_class_id=>9
 ,p_default_label_alignment=>'RIGHT'
@@ -2673,10 +2762,14 @@ wwv_flow_api.create_plug_template(
 ,p_reference_id=>2099079838218790610
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/login
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570885053957648254)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Login-region t-Form--stretchInputs t-Form--labelsAbove #REGION_CSS_CLASSES#" id="#REGION_ID#" #REGION_ATTRIBUTES# role="group" aria-labelledby="#REGION_STATIC_ID#_heading">',
 '  <div class="t-Login-header">',
 '    <span class="t-Login-logo #ICON_CSS_CLASSES#"></span>',
@@ -2694,6 +2787,7 @@ wwv_flow_api.create_plug_template(
 '  #SUB_REGIONS#',
 '</div>'))
 ,p_page_plug_template_name=>'Login'
+,p_internal_name=>'LOGIN'
 ,p_theme_id=>42
 ,p_theme_class_id=>23
 ,p_default_label_alignment=>'RIGHT'
@@ -2709,10 +2803,14 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/standard
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570885244868648254)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Region #REGION_CSS_CLASSES#" id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES# role="group" aria-labelledby="#REGION_STATIC_ID#_heading">',
 ' <div class="t-Region-header">',
 '  <div class="t-Region-headerItems t-Region-headerItems--title">',
@@ -2737,6 +2835,7 @@ wwv_flow_api.create_plug_template(
 '</div>',
 ''))
 ,p_page_plug_template_name=>'Standard'
+,p_internal_name=>'STANDARD'
 ,p_plug_table_bgcolor=>'#ffffff'
 ,p_theme_id=>42
 ,p_theme_class_id=>8
@@ -2766,21 +2865,26 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_glv_new_row=>true
 ,p_max_fixed_grid_columns=>12
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/tabs_container
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570887322745648255)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-TabsRegion #REGION_CSS_CLASSES#" #REGION_ATTRIBUTES# id="#REGION_STATIC_ID#">',
 '  #BODY#',
 '  <div class="t-TabsRegion-items">',
 '    #SUB_REGIONS#',
 '  </div>',
 '</div>'))
-,p_sub_plug_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_sub_plug_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div data-label="#SUB_REGION_TITLE#" id="SR_#SUB_REGION_ID#">',
 '  #SUB_REGION#',
 '</div>'))
 ,p_page_plug_template_name=>'Tabs Container'
+,p_internal_name=>'TABS_CONTAINER'
 ,p_theme_id=>42
 ,p_theme_class_id=>5
 ,p_preset_template_options=>'t-TabsRegion-mod--simple'
@@ -2805,10 +2909,14 @@ wwv_flow_api.create_plug_tmpl_display_point(
 ,p_has_grid_support=>false
 ,p_glv_new_row=>true
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/title_bar
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570888548733648256)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES# class="t-BreadcrumbRegion #REGION_CSS_CLASSES#"> ',
 '  <div class="t-BreadcrumbRegion-body">',
 '    <div class="t-BreadcrumbRegion-breadcrumb">',
@@ -2821,6 +2929,7 @@ wwv_flow_api.create_plug_template(
 '  <div class="t-BreadcrumbRegion-buttons">#PREVIOUS##CLOSE##DELETE##HELP##CHANGE##EDIT##COPY##CREATE##NEXT#</div>',
 '</div>'))
 ,p_page_plug_template_name=>'Title Bar'
+,p_internal_name=>'TITLE_BAR'
 ,p_theme_id=>42
 ,p_theme_class_id=>6
 ,p_default_template_options=>'t-BreadcrumbRegion--showBreadcrumb'
@@ -2830,10 +2939,14 @@ wwv_flow_api.create_plug_template(
 ,p_reference_id=>2530016523834132090
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/region/wizard_container
+begin
 wwv_flow_api.create_plug_template(
  p_id=>wwv_flow_api.id(27570889049097648257)
 ,p_layout=>'TABLE'
-,p_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Wizard #REGION_CSS_CLASSES#" id="#REGION_STATIC_ID#" #REGION_ATTRIBUTES#>',
 '  <div class="t-Wizard-header">',
 '    <h1 class="t-Wizard-title">#TITLE#</h1>',
@@ -2850,6 +2963,7 @@ wwv_flow_api.create_plug_template(
 '  </div>',
 '</div>'))
 ,p_page_plug_template_name=>'Wizard Container'
+,p_internal_name=>'WIZARD_CONTAINER'
 ,p_theme_id=>42
 ,p_theme_class_id=>8
 ,p_preset_template_options=>'t-Wizard--hideStepsXSmall'
@@ -2868,23 +2982,24 @@ wwv_flow_api.create_plug_tmpl_display_point(
 );
 end;
 /
-prompt --application/shared_components/user_interface/templates/list
+prompt --application/shared_components/user_interface/templates/list/badge_list
 begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570897495231648265)
-,p_list_template_current=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_current=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-BadgeList-item #A02#">',
 '  <span class="t-BadgeList-label">#TEXT#</span>',
 '  <span class="t-BadgeList-value"><a href="#LINK#" #A03#>#A01#</a></span>',
 '</li>',
 ''))
-,p_list_template_noncurrent=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_noncurrent=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-BadgeList-item #A02#">',
 '  <span class="t-BadgeList-label">#TEXT#</span>',
 '  <span class="t-BadgeList-value"><a href="#LINK#" #A03#>#A01#</a></span>',
 '</li>',
 ''))
 ,p_list_template_name=>'Badge List'
+,p_internal_name=>'BADGE_LIST'
 ,p_theme_id=>42
 ,p_theme_class_id=>3
 ,p_default_template_options=>'t-BadgeList--responsive'
@@ -2895,14 +3010,18 @@ wwv_flow_api.create_list_template(
 ,p_a02_label=>'List item CSS Classes'
 ,p_a03_label=>'Link Attributes'
 ,p_reference_id=>2062482847268086664
-,p_list_template_comment=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_comment=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'A01: Large Number',
 'A02: List Item Classes',
 'A03: Link Attributes'))
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/cards
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570899110092648267)
-,p_list_template_current=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_current=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-Cards-item #A04#">',
 '  <div class="t-Card">',
 '    <a href="#LINK#" class="t-Card-wrap">',
@@ -2915,7 +3034,7 @@ wwv_flow_api.create_list_template(
 '    </a>',
 '  </div>',
 '</li>'))
-,p_list_template_noncurrent=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_noncurrent=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-Cards-item #A04#">',
 '  <div class="t-Card">',
 '    <a href="#LINK#" class="t-Card-wrap">',
@@ -2929,6 +3048,7 @@ wwv_flow_api.create_list_template(
 '  </div>',
 '</li>'))
 ,p_list_template_name=>'Cards'
+,p_internal_name=>'CARDS'
 ,p_theme_id=>42
 ,p_theme_class_id=>4
 ,p_preset_template_options=>'t-Cards--3cols:t-Cards--featured'
@@ -2940,6 +3060,10 @@ wwv_flow_api.create_list_template(
 ,p_a04_label=>'List Item CSS Classes'
 ,p_reference_id=>2885322685880632508
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/links_list
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570901237910648268)
 ,p_list_template_current=>'<li class="t-LinksList-item is-current #A03#"><a href="#LINK#" class="t-LinksList-link" #A02#><span class="t-LinksList-icon"><span class="t-Icon #ICON_CSS_CLASSES#"></span></span><span class="t-LinksList-label">#TEXT#</span><span class="t-LinksList-b'
@@ -2947,6 +3071,7 @@ wwv_flow_api.create_list_template(
 ,p_list_template_noncurrent=>'<li class="t-LinksList-item #A03#"><a href="#LINK#" class="t-LinksList-link" #A02#><span class="t-LinksList-icon"><span class="t-Icon #ICON_CSS_CLASSES#"></span></span><span class="t-LinksList-label">#TEXT#</span><span class="t-LinksList-badge">#A01#'
 ||'</span></a></li>'
 ,p_list_template_name=>'Links List'
+,p_internal_name=>'LINKS_LIST'
 ,p_theme_id=>42
 ,p_theme_class_id=>18
 ,p_list_template_before_rows=>'<ul class="t-LinksList #COMPONENT_CSS_CLASSES#" id="#LIST_ID#">'
@@ -2966,9 +3091,13 @@ wwv_flow_api.create_list_template(
 ,p_a03_label=>'List Item CSS Classes'
 ,p_reference_id=>4070914341144059318
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/media_list
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570902047522648271)
-,p_list_template_current=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_current=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-MediaList-item is-active #A04#">',
 '    <a href="#LINK#" class="t-MediaList-itemWrap" #A03#>',
 '        <div class="t-MediaList-iconWrap">',
@@ -2983,7 +3112,7 @@ wwv_flow_api.create_list_template(
 '        </div>',
 '    </a>',
 '</li>'))
-,p_list_template_noncurrent=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_noncurrent=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-MediaList-item  #A04#">',
 '    <a href="#LINK#" class="t-MediaList-itemWrap" #A03#>',
 '        <div class="t-MediaList-iconWrap">',
@@ -2999,6 +3128,7 @@ wwv_flow_api.create_list_template(
 '    </a>',
 '</li>'))
 ,p_list_template_name=>'Media List'
+,p_internal_name=>'MEDIA_LIST'
 ,p_theme_id=>42
 ,p_theme_class_id=>5
 ,p_default_template_options=>'t-MediaList--showDesc:t-MediaList--showIcons'
@@ -3010,12 +3140,17 @@ wwv_flow_api.create_list_template(
 ,p_a04_label=>'List Item CSS Classes'
 ,p_reference_id=>2066548068783481421
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/menu_bar
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570902986992648271)
 ,p_list_template_current=>'<li data-current="true" data-id="#A01#" data-disabled="#A02#" data-hide="#A03#" data-shortcut="#A05#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a></li>'
 ,p_list_template_noncurrent=>'<li data-id="#A01#" data-disabled="#A02#" data-hide="#A03#" data-shortcut="#A05#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a></li>'
 ,p_list_template_name=>'Menu Bar'
-,p_javascript_code_onload=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'MENU_BAR'
+,p_javascript_code_onload=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'var e = apex.jQuery("##PARENT_STATIC_ID#_menubar", apex.gPageContext$);',
 'if (e.hasClass("js-addActions")) {',
 '  if ( apex.actions ) {',
@@ -3047,16 +3182,21 @@ wwv_flow_api.create_list_template(
 ,p_sub_templ_noncurr_w_child=>'<li data-id="#A01#" data-disabled="#A02#" data-hide="#A03#" data-shortcut="#A05#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a>'
 ,p_reference_id=>2008709236185638887
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/menu_popup
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570903449587648272)
-,p_list_template_current=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_current=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li data-id="#A01#" data-disabled="#A02#" data-hide="#A03#" data-shortcut="#A05#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a></li>',
 ''))
-,p_list_template_noncurrent=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_noncurrent=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li data-id="#A01#" data-disabled="#A02#" data-hide="#A03#" data-shortcut="#A05#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a></li>',
 ''))
 ,p_list_template_name=>'Menu Popup'
-,p_javascript_code_onload=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'MENU_POPUP'
+,p_javascript_code_onload=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'var e = apex.jQuery("##PARENT_STATIC_ID#_menu", apex.gPageContext$);',
 'if (e.hasClass("js-addActions")) {',
 '  if ( apex.actions ) {',
@@ -3086,21 +3226,26 @@ wwv_flow_api.create_list_template(
 ,p_a05_label=>'Shortcut'
 ,p_reference_id=>3492264004432431646
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/navigation_bar
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570903552878648272)
-,p_list_template_current=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_current=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item is-active #A02#">',
 '  <a class="t-Button t-Button--icon t-Button--header t-Button--navBar" href="#LINK#" role="button">',
 '      <span class="t-Icon #ICON_CSS_CLASSES#"></span><span class="t-Button-label">#TEXT_ESC_SC#</span><span class="t-Button-badge">#A01#</span>',
 '  </a>',
 '</li>'))
-,p_list_template_noncurrent=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_noncurrent=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item #A02#">',
 '  <a class="t-Button t-Button--icon t-Button--header t-Button--navBar" href="#LINK#" role="button">',
 '    <span class="t-Icon #ICON_CSS_CLASSES#"></span><span class="t-Button-label">#TEXT_ESC_SC#</span><span class="t-Button-badge">#A01#</span>',
 '  </a>',
 '</li>'))
 ,p_list_template_name=>'Navigation Bar'
+,p_internal_name=>'NAVIGATION_BAR'
 ,p_theme_id=>42
 ,p_theme_class_id=>20
 ,p_list_template_before_rows=>'<ul class="t-NavigationBar #COMPONENT_CSS_CLASSES#" id="#LIST_ID#">'
@@ -3109,12 +3254,12 @@ wwv_flow_api.create_list_template(
 ,p_after_sub_list=>'</ul></div></li>'
 ,p_sub_list_item_current=>'<li data-current="true" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#">#TEXT_ESC_SC#</a></li>'
 ,p_sub_list_item_noncurrent=>'<li data-current="false" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#">#TEXT_ESC_SC#</a></li>'
-,p_item_templ_curr_w_child=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_item_templ_curr_w_child=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item is-active #A02#">',
 '  <button class="t-Button t-Button--icon t-Button t-Button--header t-Button--navBar js-menuButton" type="button" id="#LIST_ITEM_ID#" data-menu="menu_#LIST_ITEM_ID#">',
 '      <span class="t-Icon #ICON_CSS_CLASSES#"></span><span class="t-Button-label">#TEXT_ESC_SC#</span><span class="t-Button-badge">#A01#</span><span class="a-Icon icon-down-arrow"></span>',
 '  </button>'))
-,p_item_templ_noncurr_w_child=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_item_templ_noncurr_w_child=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-NavigationBar-item #A02#">',
 '  <button class="t-Button t-Button--icon t-Button t-Button--header t-Button--navBar js-menuButton" type="button" id="#LIST_ITEM_ID#" data-menu="menu_#LIST_ITEM_ID#">',
 '      <span class="t-Icon #ICON_CSS_CLASSES#"></span><span class="t-Button-label">#TEXT_ESC_SC#</span><span class="t-Button-badge">#A01#</span><span class="a-Icon icon-down-arrow"></span>',
@@ -3125,18 +3270,23 @@ wwv_flow_api.create_list_template(
 ,p_a02_label=>'List  Item CSS Classes'
 ,p_reference_id=>2846096252961119197
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/side_navigation_menu
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570903613967648272)
 ,p_list_template_current=>'<li data-current="true" data-id="#A01#" data-disabled="#A02#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a></li>'
 ,p_list_template_noncurrent=>'<li data-id="#A01#" data-disabled="#A02#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a></li>'
 ,p_list_template_name=>'Side Navigation Menu'
+,p_internal_name=>'SIDE_NAVIGATION_MENU'
 ,p_javascript_file_urls=>'#IMAGE_PREFIX#libraries/apex/#MIN_DIRECTORY#widget.treeView#MIN#.js?v=#APEX_VERSION#'
-,p_javascript_code_onload=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_javascript_code_onload=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '$(''body'').addClass(''t-PageBody--leftNav'');',
 ''))
 ,p_theme_id=>42
 ,p_theme_class_id=>19
-,p_list_template_before_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_before_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Body-nav" id="t_Body_nav" role="navigation" aria-label="&APP_TITLE!ATTR.">',
 '<div class="t-TreeNav #COMPONENT_CSS_CLASSES#" id="t_TreeNav" data-id="#PARENT_STATIC_ID#_tree" aria-label="&APP_TITLE!ATTR."><ul style="display:none">'))
 ,p_list_template_after_rows=>'</ul></div></div>'
@@ -3153,23 +3303,33 @@ wwv_flow_api.create_list_template(
 ,p_a04_label=>'Title'
 ,p_reference_id=>2466292414354694776
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/tabs
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570903758081648272)
 ,p_list_template_current=>'<li class="t-Tabs-item is-active"><a href="#LINK#" class="t-Tabs-link"><span class="t-Icon #ICON_CSS_CLASSES#"></span><span class="t-Tabs-label">#TEXT#</span></a></li>'
 ,p_list_template_noncurrent=>'<li class="t-Tabs-item"><a href="#LINK#" class="t-Tabs-link"><span class="t-Icon #ICON_CSS_CLASSES#"></span><span class="t-Tabs-label">#TEXT#</span></a></li>'
 ,p_list_template_name=>'Tabs'
+,p_internal_name=>'TABS'
 ,p_theme_id=>42
 ,p_theme_class_id=>7
 ,p_list_template_before_rows=>'<ul class="t-Tabs #COMPONENT_CSS_CLASSES#">'
 ,p_list_template_after_rows=>'</ul>'
 ,p_reference_id=>3288206686691809997
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/top_navigation_menu
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570904606968648273)
 ,p_list_template_current=>'<li data-current="true" data-id="#A01#" data-disabled="#A02#" data-hide="#A03#" data-shortcut="#A05#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a></li>'
 ,p_list_template_noncurrent=>'<li data-id="#A01#" data-disabled="#A02#" data-hide="#A03#" data-shortcut="#A05#" data-icon="#ICON_CSS_CLASSES#"><a href="#LINK#" title="#A04#">#TEXT_ESC_SC#</a></li>'
 ,p_list_template_name=>'Top Navigation Menu'
-,p_javascript_code_onload=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'TOP_NAVIGATION_MENU'
+,p_javascript_code_onload=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'var e = apex.jQuery("##PARENT_STATIC_ID#_menubar", apex.gPageContext$);',
 'if (e.hasClass("js-addActions")) {',
 '  if ( apex.actions ) {',
@@ -3205,17 +3365,22 @@ wwv_flow_api.create_list_template(
 ,p_a05_label=>'Shortcut Key'
 ,p_reference_id=>2525307901300239072
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/list/wizard_progress
+begin
 wwv_flow_api.create_list_template(
  p_id=>wwv_flow_api.id(27570905109086648273)
 ,p_list_template_current=>'<li class="t-WizardSteps-step is-active" id="#LIST_ITEM_ID#"><div class="t-WizardSteps-wrap"><span class="t-WizardSteps-marker"></span><span class="t-WizardSteps-label">#TEXT# <span class="t-WizardSteps-labelState"></span></span></div></li>'
 ,p_list_template_noncurrent=>'<li class="t-WizardSteps-step" id="#LIST_ITEM_ID#"><div class="t-WizardSteps-wrap"><span class="t-WizardSteps-marker"><span class="t-Icon a-Icon icon-check"></span></span><span class="t-WizardSteps-label">#TEXT# <span class="t-WizardSteps-labelState"'
 ||'></span></span></div></li>'
 ,p_list_template_name=>'Wizard Progress'
+,p_internal_name=>'WIZARD_PROGRESS'
 ,p_javascript_code_onload=>'apex.theme.initWizardProgressBar();'
 ,p_theme_id=>42
 ,p_theme_class_id=>17
 ,p_preset_template_options=>'t-WizardSteps--displayLabels'
-,p_list_template_before_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_list_template_before_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<h2 class="u-VisuallyHidden">#CURRENT_PROGRESS#</h2>',
 '<ul class="t-WizardSteps #COMPONENT_CSS_CLASSES#" id="#LIST_ID#">'))
 ,p_list_template_after_rows=>'</ul>'
@@ -3223,12 +3388,13 @@ wwv_flow_api.create_list_template(
 );
 end;
 /
-prompt --application/shared_components/user_interface/templates/report
+prompt --application/shared_components/user_interface/templates/report/alerts
 begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570889626855648257)
 ,p_row_template_name=>'Alerts'
-,p_row_template1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'ALERTS'
+,p_row_template1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Alert t-Alert--horizontal t-Alert--colorBG t-Alert--defaultIcons t-Alert--#ALERT_TYPE#" role="alert">',
 '  <div class="t-Alert-wrap">',
 '    <div class="t-Alert-icon">',
@@ -3248,7 +3414,7 @@ wwv_flow_api.create_row_template(
 '  </div>',
 '</div>'))
 ,p_row_template_before_rows=>'<div class="t-Alerts">'
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</div>',
 '<table class="t-Report-pagination" role="presentation">#PAGINATION#</table>'))
 ,p_row_template_type=>'NAMED_COLUMNS'
@@ -3257,19 +3423,19 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'0'
 ,p_row_template_display_cond4=>'0'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3278,16 +3444,21 @@ wwv_flow_api.create_row_template(
 ,p_reference_id=>2881456138952347027
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/report/badge_list
+begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570889793387648258)
 ,p_row_template_name=>'Badge List'
-,p_row_template1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'BADGE_LIST'
+,p_row_template1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-BadgeList-item">',
 '  <span class="t-BadgeList-label">#COLUMN_HEADER#</span>',
 '  <span class="t-BadgeList-value">#COLUMN_VALUE#</span>',
 '</li>'))
 ,p_row_template_before_rows=>'<ul class="t-BadgeList t-BadgeList--circular #COMPONENT_CSS_CLASSES#">'
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</ul>',
 '<table class="t-Report-pagination" role="presentation">#PAGINATION#</table>'))
 ,p_row_template_type=>'GENERIC_COLUMNS'
@@ -3296,19 +3467,19 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'0'
 ,p_row_template_display_cond4=>'0'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3319,10 +3490,15 @@ wwv_flow_api.create_row_template(
 ,p_reference_id=>2103197159775914759
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/report/cards
+begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570891487513648259)
 ,p_row_template_name=>'Cards'
-,p_row_template1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'CARDS'
+,p_row_template1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-Cards-item #CARD_MODIFIERS#">',
 '  <div class="t-Card">',
 '    <a href="#CARD_LINK#" class="t-Card-wrap">',
@@ -3336,7 +3512,7 @@ wwv_flow_api.create_row_template(
 '  </div>',
 '</li>'))
 ,p_row_template_before_rows=>'<ul class="t-Cards #COMPONENT_CSS_CLASSES#" #REPORT_ATTRIBUTES# id="#REGION_STATIC_ID#_cards">'
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</ul>',
 '<table class="t-Report-pagination" role="presentation">#PAGINATION#</table>'))
 ,p_row_template_type=>'NAMED_COLUMNS'
@@ -3345,19 +3521,19 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'0'
 ,p_row_template_display_cond4=>'0'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3367,10 +3543,15 @@ wwv_flow_api.create_row_template(
 ,p_reference_id=>2973535649510699732
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/report/comments
+begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570893534013648261)
 ,p_row_template_name=>'Comments'
-,p_row_template1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'COMMENTS'
+,p_row_template1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-Comments-item #COMMENT_MODIFIERS#">',
 '    <div class="t-Comments-icon a-MediaBlock-graphic">',
 '        <div class="t-Comments-userIcon #ICON_MODIFIER#" aria-hidden="true">#USER_ICON#</div>',
@@ -3385,7 +3566,7 @@ wwv_flow_api.create_row_template(
 '    </div>',
 '</li>'))
 ,p_row_template_before_rows=>'<ul class="t-Comments #COMPONENT_CSS_CLASSES#" #REPORT_ATTRIBUTES# id="#REGION_STATIC_ID#_report">'
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</ul>',
 '<table class="t-Report-pagination" role="presentation">#PAGINATION#</table>'))
 ,p_row_template_type=>'NAMED_COLUMNS'
@@ -3394,20 +3575,20 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'0'
 ,p_row_template_display_cond4=>'0'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>',
 ''))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3417,10 +3598,15 @@ wwv_flow_api.create_row_template(
 ,p_reference_id=>2611722012730764232
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/report/search_results
+begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570893915165648262)
 ,p_row_template_name=>'Search Results'
-,p_row_template1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'SEARCH_RESULTS'
+,p_row_template1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '  <li class="t-SearchResults-item">',
 '    <h3 class="t-SearchResults-title"><a href="#SEARCH_LINK#">#SEARCH_TITLE#</a></h3>',
 '    <div class="t-SearchResults-info">',
@@ -3429,7 +3615,7 @@ wwv_flow_api.create_row_template(
 '    </div>',
 '  </li>'))
 ,p_row_template_condition1=>':LABEL_02 is null'
-,p_row_template2=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template2=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '  <li class="t-SearchResults-item">',
 '    <h3 class="t-SearchResults-title"><a href="#SEARCH_LINK#">#SEARCH_TITLE#</a></h3>',
 '    <div class="t-SearchResults-info">',
@@ -3439,7 +3625,7 @@ wwv_flow_api.create_row_template(
 '    </div>',
 '  </li>'))
 ,p_row_template_condition2=>':LABEL_03 is null'
-,p_row_template3=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template3=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '  <li class="t-SearchResults-item">',
 '    <h3 class="t-SearchResults-title"><a href="#SEARCH_LINK#">#SEARCH_TITLE#</a></h3>',
 '    <div class="t-SearchResults-info">',
@@ -3450,7 +3636,7 @@ wwv_flow_api.create_row_template(
 '    </div>',
 '  </li>'))
 ,p_row_template_condition3=>':LABEL_04 is null'
-,p_row_template4=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template4=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '  <li class="t-SearchResults-item">',
 '    <h3 class="t-SearchResults-title"><a href="#SEARCH_LINK#">#SEARCH_TITLE#</a></h3>',
 '    <div class="t-SearchResults-info">',
@@ -3461,10 +3647,10 @@ wwv_flow_api.create_row_template(
 '      <span class="t-SearchResults-misc">#LABEL_04#: #VALUE_04#</span>',
 '    </div>',
 '  </li>'))
-,p_row_template_before_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_before_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-SearchResults #COMPONENT_CSS_CLASSES#">',
 '<ul class="t-SearchResults-list">'))
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</ul>',
 '<table class="t-Report-pagination" role="presentation">#PAGINATION#</table>',
 '</div>'))
@@ -3474,19 +3660,19 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'NOT_CONDITIONAL'
 ,p_row_template_display_cond4=>'NOT_CONDITIONAL'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3496,17 +3682,22 @@ wwv_flow_api.create_row_template(
 ,p_translate_this_template=>'N'
 ,p_row_template_comment=>' (SELECT link_text, link_target, detail1, detail2, last_modified)'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/report/standard
+begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570894016141648262)
 ,p_row_template_name=>'Standard'
+,p_internal_name=>'STANDARD'
 ,p_row_template1=>'<td class="t-Report-cell" #ALIGNMENT# headers="#COLUMN_HEADER_NAME#">#COLUMN_VALUE#</td>'
-,p_row_template_before_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_before_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Report #COMPONENT_CSS_CLASSES#" id="report_#REGION_STATIC_ID#" #REPORT_ATTRIBUTES#>',
 '  <div class="t-Report-wrap">',
 '    <table class="t-Report-pagination" role="presentation">#TOP_PAGINATION#</table>',
 '    <div class="t-Report-tableWrap">',
 '    <table class="t-Report-report" summary="#REGION_TITLE#">'))
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '      </tbody>',
 '    </table>',
 '    </div>',
@@ -3517,7 +3708,7 @@ wwv_flow_api.create_row_template(
 ,p_row_template_type=>'GENERIC_COLUMNS'
 ,p_before_column_heading=>'<thead>'
 ,p_column_heading_template=>'<th class="t-Report-colHead" #ALIGNMENT# id="#COLUMN_HEADER_NAME#" #COLUMN_WIDTH#>#COLUMN_HEADER#</th>'
-,p_after_column_heading=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_after_column_heading=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</thead>',
 '<tbody>'))
 ,p_row_template_display_cond1=>'0'
@@ -3525,19 +3716,19 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'0'
 ,p_row_template_display_cond4=>'0'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3555,10 +3746,15 @@ wwv_flow_api.create_row_template_patch(
 );
 exception when others then null;
 end;
+end;
+/
+prompt --application/shared_components/user_interface/templates/report/timeline
+begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570895330843648263)
 ,p_row_template_name=>'Timeline'
-,p_row_template1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'TIMELINE'
+,p_row_template1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-Timeline-item #EVENT_MODIFIERS#" #EVENT_ATTRIBUTES#>',
 '  <div class="t-Timeline-wrap">',
 '    <div class="t-Timeline-user">',
@@ -3585,7 +3781,7 @@ wwv_flow_api.create_row_template(
 '  </div>',
 '</li>'))
 ,p_row_template_condition1=>':EVENT_LINK is null'
-,p_row_template2=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template2=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<li class="t-Timeline-item #EVENT_MODIFIERS#" #EVENT_ATTRIBUTES#>',
 '  <a href="#EVENT_LINK#" class="t-Timeline-wrap">',
 '    <div class="t-Timeline-user">',
@@ -3611,10 +3807,10 @@ wwv_flow_api.create_row_template(
 '    </div>',
 '  </a>',
 '</li>'))
-,p_row_template_before_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_before_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<ul class="t-Timeline #COMPONENT_CSS_CLASSES#" #REPORT_ATTRIBUTES# id="#REGION_STATIC_ID#_timeline">',
 ''))
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</ul>',
 '<table class="t-Report-pagination" role="presentation">#PAGINATION#</table>'))
 ,p_row_template_type=>'NAMED_COLUMNS'
@@ -3623,19 +3819,19 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'0'
 ,p_row_template_display_cond4=>'NOT_CONDITIONAL'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3644,10 +3840,15 @@ wwv_flow_api.create_row_template(
 ,p_reference_id=>1513373588340069864
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/report/value_attribute_pairs_column
+begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570895530956648264)
 ,p_row_template_name=>'Value Attribute Pairs - Column'
-,p_row_template1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'VALUE_ATTRIBUTE_PAIRS_COLUMN'
+,p_row_template1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<dt class="t-AVPList-label">',
 '  #COLUMN_HEADER#',
 '</dt>',
@@ -3655,7 +3856,7 @@ wwv_flow_api.create_row_template(
 '  #COLUMN_VALUE#',
 '</dd>'))
 ,p_row_template_before_rows=>'<dl class="t-AVPList #COMPONENT_CSS_CLASSES#" #REPORT_ATTRIBUTES#>'
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</dl>',
 '<table class="t-Report-pagination" role="presentation">#PAGINATION#</table>'))
 ,p_row_template_type=>'GENERIC_COLUMNS'
@@ -3664,19 +3865,19 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'0'
 ,p_row_template_display_cond4=>'0'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3686,10 +3887,15 @@ wwv_flow_api.create_row_template(
 ,p_reference_id=>2099068636272681754
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/report/value_attribute_pairs_row
+begin
 wwv_flow_api.create_row_template(
  p_id=>wwv_flow_api.id(27570896589874648264)
 ,p_row_template_name=>'Value Attribute Pairs - Row'
-,p_row_template1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'VALUE_ATTRIBUTE_PAIRS_ROW'
+,p_row_template1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<dt class="t-AVPList-label">',
 '  #1#',
 '</dt>',
@@ -3697,7 +3903,7 @@ wwv_flow_api.create_row_template(
 '  #2#',
 '</dd>'))
 ,p_row_template_before_rows=>'<dl class="t-AVPList #COMPONENT_CSS_CLASSES#" #REPORT_ATTRIBUTES# id="report_#REGION_STATIC_ID#">'
-,p_row_template_after_rows=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_row_template_after_rows=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</dl>',
 '<table class="t-Report-pagination" role="presentation">#PAGINATION#</table>'))
 ,p_row_template_type=>'NAMED_COLUMNS'
@@ -3706,19 +3912,19 @@ wwv_flow_api.create_row_template(
 ,p_row_template_display_cond3=>'0'
 ,p_row_template_display_cond4=>'0'
 ,p_pagination_template=>'<span class="t-Report-paginationText">#TEXT#</span>'
-,p_next_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_page_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_page_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS#',
 '</a>'))
-,p_next_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_next_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--next">',
 '  #PAGINATION_NEXT_SET#<span class="a-Icon icon-right-arrow"></span>',
 '</a>'))
-,p_previous_set_template=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_previous_set_template=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<a href="#LINK#" class="t-Button t-Button--small t-Button--noUI t-Report-paginationLink t-Report-paginationLink--prev">',
 '  <span class="a-Icon icon-left-arrow"></span>#PAGINATION_PREVIOUS_SET#',
 '</a>'))
@@ -3730,15 +3936,16 @@ wwv_flow_api.create_row_template(
 );
 end;
 /
-prompt --application/shared_components/user_interface/templates/label
+prompt --application/shared_components/user_interface/templates/label/hidden
 begin
 wwv_flow_api.create_field_template(
  p_id=>wwv_flow_api.id(27570905686324648274)
 ,p_template_name=>'Hidden'
-,p_template_body1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'HIDDEN'
+,p_template_body1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Form-labelContainer t-Form-labelContainer--hiddenLabel col col-#LABEL_COLUMN_SPAN_NUMBER#">',
 '<label for="#CURRENT_ITEM_NAME#" id="#LABEL_ID#" class="t-Form-label u-VisuallyHidden">'))
-,p_template_body2=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template_body2=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</label>',
 '</div>'))
 ,p_before_item=>'<div class="t-Form-fieldContainer t-Form-fieldContainer--hiddenLabel rel-col #ITEM_CSS_CLASSES#" id="#CURRENT_ITEM_CONTAINER_ID#">'
@@ -3753,13 +3960,18 @@ wwv_flow_api.create_field_template(
 ,p_reference_id=>2039339104148359505
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/label/optional
+begin
 wwv_flow_api.create_field_template(
  p_id=>wwv_flow_api.id(27570905774188648275)
 ,p_template_name=>'Optional'
-,p_template_body1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'OPTIONAL'
+,p_template_body1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Form-labelContainer col col-#LABEL_COLUMN_SPAN_NUMBER#">',
 '<label for="#CURRENT_ITEM_NAME#" id="#LABEL_ID#" class="t-Form-label">'))
-,p_template_body2=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template_body2=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</label>',
 '</div>',
 ''))
@@ -3775,13 +3987,18 @@ wwv_flow_api.create_field_template(
 ,p_reference_id=>2317154212072806530
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/label/optional_above
+begin
 wwv_flow_api.create_field_template(
  p_id=>wwv_flow_api.id(27570905897345648276)
 ,p_template_name=>'Optional - Above'
-,p_template_body1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'OPTIONAL_ABOVE'
+,p_template_body1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Form-labelContainer">',
 '<label for="#CURRENT_ITEM_NAME#" id="#LABEL_ID#" class="t-Form-label">'))
-,p_template_body2=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template_body2=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</label>#HELP_TEMPLATE#',
 '</div>'))
 ,p_before_item=>'<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked #ITEM_CSS_CLASSES#" id="#CURRENT_ITEM_CONTAINER_ID#">'
@@ -3796,13 +4013,18 @@ wwv_flow_api.create_field_template(
 ,p_reference_id=>3030114864004968404
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/label/required
+begin
 wwv_flow_api.create_field_template(
  p_id=>wwv_flow_api.id(27570905904918648276)
 ,p_template_name=>'Required'
-,p_template_body1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'REQUIRED'
+,p_template_body1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Form-labelContainer col col-#LABEL_COLUMN_SPAN_NUMBER#">',
 '  <label for="#CURRENT_ITEM_NAME#" id="#LABEL_ID#" class="t-Form-label">'))
-,p_template_body2=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template_body2=>wwv_flow_string.join(wwv_flow_t_varchar2(
 ' <span class="u-VisuallyHidden">(#VALUE_REQUIRED#)</span></label><span class="t-Form-required"><span class="a-Icon icon-asterisk"></span></span>',
 '</div>'))
 ,p_before_item=>'<div class="t-Form-fieldContainer rel-col #ITEM_CSS_CLASSES#" id="#CURRENT_ITEM_CONTAINER_ID#">'
@@ -3817,13 +4039,18 @@ wwv_flow_api.create_field_template(
 ,p_reference_id=>2525313812251712801
 ,p_translate_this_template=>'N'
 );
+end;
+/
+prompt --application/shared_components/user_interface/templates/label/required_above
+begin
 wwv_flow_api.create_field_template(
  p_id=>wwv_flow_api.id(27570906027170648276)
 ,p_template_name=>'Required - Above'
-,p_template_body1=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'REQUIRED_ABOVE'
+,p_template_body1=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-Form-labelContainer">',
 '  <label for="#CURRENT_ITEM_NAME#" id="#LABEL_ID#" class="t-Form-label">'))
-,p_template_body2=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_template_body2=>wwv_flow_string.join(wwv_flow_t_varchar2(
 ' <span class="u-VisuallyHidden">(#VALUE_REQUIRED#)</span></label><span class="t-Form-required"><span class="a-Icon icon-asterisk"></span></span> #HELP_TEMPLATE#',
 '</div>'))
 ,p_before_item=>'<div class="t-Form-fieldContainer t-Form-fieldContainer--stacked #ITEM_CSS_CLASSES#" id="#CURRENT_ITEM_CONTAINER_ID#">'
@@ -3840,11 +4067,12 @@ wwv_flow_api.create_field_template(
 );
 end;
 /
-prompt --application/shared_components/user_interface/templates/breadcrumb
+prompt --application/shared_components/user_interface/templates/breadcrumb/breadcrumb
 begin
 wwv_flow_api.create_menu_template(
  p_id=>wwv_flow_api.id(27570906710636648277)
 ,p_name=>'Breadcrumb'
+,p_internal_name=>'BREADCRUMB'
 ,p_before_first=>'<ul class="t-Breadcrumb #COMPONENT_CSS_CLASSES#">'
 ,p_current_page_option=>'<li class="t-Breadcrumb-item is-active"><span class="t-Breadcrumb-label">#NAME#</span></li>'
 ,p_non_current_page_option=>'<li class="t-Breadcrumb-item"><a href="#LINK#" class="t-Breadcrumb-label">#NAME#</a></li>'
@@ -3864,7 +4092,7 @@ wwv_flow_api.create_popup_lov_template(
  p_id=>wwv_flow_api.id(27570906919269648279)
 ,p_page_name=>'winlov'
 ,p_page_title=>'Search Dialog'
-,p_page_html_head=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_page_html_head=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<!DOCTYPE html>',
 '<html lang="&BROWSER_LANGUAGE.">',
 '<head>',
@@ -3906,21 +4134,22 @@ wwv_flow_api.create_popup_lov_template(
 );
 end;
 /
-prompt --application/shared_components/user_interface/templates/calendar
+prompt --application/shared_components/user_interface/templates/calendar/calendar
 begin
 wwv_flow_api.create_calendar_template(
  p_id=>wwv_flow_api.id(27570906892436648278)
 ,p_cal_template_name=>'Calendar'
-,p_day_of_week_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_internal_name=>'CALENDAR'
+,p_day_of_week_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<th id="#DY#" scope="col" class="t-ClassicCalendar-dayColumn">',
 '  <span class="visible-md visible-lg">#IDAY#</span>',
 '  <span class="hidden-md hidden-lg">#IDY#</span>',
 '</th>'))
-,p_month_title_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_month_title_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-ClassicCalendar">',
 '<h1 class="t-ClassicCalendar-title">#IMONTH# #YYYY#</h1>'))
 ,p_month_open_format=>'<table class="t-ClassicCalendar-calendar" cellpadding="0" cellspacing="0" border="0" summary="#IMONTH# #YYYY#">'
-,p_month_close_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_month_close_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</table>',
 '</div>',
 ''))
@@ -3939,16 +4168,16 @@ wwv_flow_api.create_calendar_template(
 ,p_daily_title_format=>'<table cellspacing="0" cellpadding="0" border="0" summary="" class="t1DayCalendarHolder"> <tr> <td class="t1MonthTitle">#IMONTH# #DD#, #YYYY#</td> </tr> <tr> <td>'
 ,p_daily_open_format=>'<tr>'
 ,p_daily_close_format=>'</tr>'
-,p_weekly_title_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_weekly_title_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-ClassicCalendar t-ClassicCalendar--weekly">',
 '<h1 class="t-ClassicCalendar-title">#WTITLE#</h1>'))
-,p_weekly_day_of_week_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_weekly_day_of_week_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<th scope="col" class="t-ClassicCalendar-dayColumn" id="#DY#">',
 '  <span class="visible-md visible-lg">#DD# #IDAY#</span>',
 '  <span class="hidden-md hidden-lg">#DD# #IDY#</span>',
 '</th>'))
 ,p_weekly_month_open_format=>'<table border="0" cellpadding="0" cellspacing="0" summary="#CALENDAR_TITLE# #START_DL# - #END_DL#" class="t-ClassicCalendar-calendar">'
-,p_weekly_month_close_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_weekly_month_close_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</table>',
 '</div>'))
 ,p_weekly_day_open_format=>'<td class="t-ClassicCalendar-day" headers="#DY#"><div class="t-ClassicCalendar-dayEvents">'
@@ -3962,11 +4191,11 @@ wwv_flow_api.create_calendar_template(
 ,p_weekly_hour_open_format=>'<tr>'
 ,p_weekly_hour_close_format=>'</tr>'
 ,p_daily_day_of_week_format=>'<th scope="col" id="#DY#" class="t-ClassicCalendar-dayColumn">#IDAY#</th>'
-,p_daily_month_title_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_daily_month_title_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-ClassicCalendar t-ClassicCalendar--daily">',
 '<h1 class="t-ClassicCalendar-title">#IMONTH# #DD#, #YYYY#</h1>'))
 ,p_daily_month_open_format=>'<table border="0" cellpadding="0" cellspacing="0" summary="#CALENDAR_TITLE# #START_DL#" class="t-ClassicCalendar-calendar">'
-,p_daily_month_close_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_daily_month_close_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</table>',
 '</div>'))
 ,p_daily_day_open_format=>'<td class="t-ClassicCalendar-day" headers="#DY#"><div class="t-ClassicCalendar-dayEvents">'
@@ -3977,12 +4206,12 @@ wwv_flow_api.create_calendar_template(
 ,p_daily_time_title_format=>'#TIME#'
 ,p_daily_hour_open_format=>'<tr>'
 ,p_daily_hour_close_format=>'</tr>'
-,p_cust_month_title_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_cust_month_title_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="uCal">',
 '<h1 class="uMonth">#IMONTH# <span>#YYYY#</span></h1>'))
 ,p_cust_day_of_week_format=>'<th scope="col" class="uCalDayCol" id="#DY#">#IDAY#</th>'
 ,p_cust_month_open_format=>'<table class="uCal" cellpadding="0" cellspacing="0" border="0" summary="#IMONTH# #YYYY#">'
-,p_cust_month_close_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_cust_month_close_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</table>',
 '<div class="uCalFooter"></div>',
 '</div>',
@@ -3998,7 +4227,7 @@ wwv_flow_api.create_calendar_template(
 ,p_cust_nonday_close_format=>'</td>'
 ,p_cust_weekend_title_format=>'<span class="uDayTitle weekendday">#DD#</span>'
 ,p_cust_weekend_open_format=>'<td class="uDay" headers="#DY#">'
-,p_cust_weekend_close_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_cust_weekend_close_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="uDayData">#DATA#</span>',
 '</td>'))
 ,p_cust_hour_open_format=>'<tr>'
@@ -4006,16 +4235,16 @@ wwv_flow_api.create_calendar_template(
 ,p_cust_time_title_format=>'#TIME#'
 ,p_cust_time_open_format=>'<th scope="row" class="uCalHour" id="#TIME#">'
 ,p_cust_time_close_format=>'</th>'
-,p_cust_wk_month_title_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_cust_wk_month_title_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="uCal uCalWeekly">',
 '<h1 class="uMonth">#WTITLE#</h1>'))
-,p_cust_wk_day_of_week_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_cust_wk_day_of_week_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<th scope="col" class="uCalDayCol" id="#DY#">',
 '  <span class="visible-desktop">#DD# #IDAY#</span>',
 '  <span class="hidden-desktop">#DD# <em>#IDY#</em></span>',
 '</th>'))
 ,p_cust_wk_month_open_format=>'<table border="0" cellpadding="0" cellspacing="0" summary="#CALENDAR_TITLE# #START_DL# - #END_DL#" class="uCal">'
-,p_cust_wk_month_close_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_cust_wk_month_close_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '</table>',
 '<div class="uCalFooter"></div>',
 '</div>'))
@@ -4027,22 +4256,22 @@ wwv_flow_api.create_calendar_template(
 ,p_cust_wk_today_open_format=>'<td class="uDay today" headers="#DY#"><div class="uDayData">'
 ,p_cust_wk_weekend_open_format=>'<td class="uDay weekend" headers="#DY#"><div class="uDayData">'
 ,p_cust_wk_weekend_close_format=>'</div></td>'
-,p_agenda_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_agenda_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<div class="t-ClassicCalendar t-ClassicCalendar--list">',
 '  <div class="t-ClassicCalendar-title">#IMONTH# #YYYY#</div>',
 '  <ul class="t-ClassicCalendar-list">',
 '    #DAYS#',
 '  </ul>',
 '</div>'))
-,p_agenda_past_day_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_agenda_past_day_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '  <li class="t-ClassicCalendar-listTitle is-past">',
 '    <span class="t-ClassicCalendar-listDayTitle">#IDAY#</span><span class="t-ClassicCalendar-listDayDate">#IMONTH# #DD#</span>',
 '  </li>'))
-,p_agenda_today_day_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_agenda_today_day_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '  <li class="t-ClassicCalendar-listTitle is-today">',
 '    <span class="t-ClassicCalendar-listDayTitle">#IDAY#</span><span class="t-ClassicCalendar-listDayDate">#IMONTH# #DD#</span>',
 '  </li>'))
-,p_agenda_future_day_format=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_agenda_future_day_format=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '  <li class="t-ClassicCalendar-listTitle is-future">',
 '    <span class="t-ClassicCalendar-listDayTitle">#IDAY#</span><span class="t-ClassicCalendar-listDayDate">#IMONTH# #DD#</span>',
 '  </li>'))
@@ -4063,6 +4292,7 @@ wwv_flow_api.create_theme(
  p_id=>wwv_flow_api.id(27570907314069648283)
 ,p_theme_id=>42
 ,p_theme_name=>'Universal Theme'
+,p_theme_internal_name=>'UNIVERSAL_THEME'
 ,p_ui_type_name=>'DESKTOP'
 ,p_navigation_type=>'L'
 ,p_nav_bar_type=>'LIST'
@@ -4104,12 +4334,12 @@ wwv_flow_api.create_theme(
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_theme_file_prefix(42),'#IMAGE_PREFIX#themes/theme_42/1.0/')
 ,p_files_version=>62
 ,p_icon_library=>'FONTAWESOME'
-,p_javascript_file_urls=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
-'#IMAGE_PREFIX#libraries/apex/#MIN_DIRECTORY#widget.regionDisplaySelector#MIN#.js?v=#APEX_VERSION#',
+,p_javascript_file_urls=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'#IMAGE_PREFIX#libraries/apex/#MIN_DIRECTORY#widget.apexTabs#MIN#.js?v=#APEX_VERSION#',
 '#IMAGE_PREFIX#libraries/apex/#MIN_DIRECTORY#widget.stickyWidget#MIN#.js?v=#APEX_VERSION#',
 '#IMAGE_PREFIX#libraries/apex/#MIN_DIRECTORY#widget.stickyTableHeader#MIN#.js?v=#APEX_VERSION#',
 '#IMAGE_PREFIX#libraries/apex/#MIN_DIRECTORY#tooltipManager#MIN#.js?v=#APEX_VERSION#',
-'#IMAGE_PREFIX#libraries/hammer/2.0.3/hammer#MIN#.js?v=#APEX_VERSION#',
+'#HAMMERJS_URL#',
 '#THEME_IMAGES#js/modernizr-custom#MIN#.js?v=#APEX_VERSION#',
 '#IMAGE_PREFIX#plugins/com.oracle.apex.carousel/1.0/com.oracle.apex.carousel#MIN#.js?v=#APEX_VERSION#',
 '#THEME_IMAGES#js/theme42#MIN#.js?v=#APEX_VERSION#'))
@@ -4125,6 +4355,8 @@ wwv_flow_api.create_theme_style(
 ,p_name=>'Vista'
 ,p_css_file_urls=>'#THEME_IMAGES#css/Vista#MIN#.css?v=#APEX_VERSION#'
 ,p_is_current=>false
+,p_is_public=>false
+,p_is_accessible=>false
 ,p_theme_roller_read_only=>true
 ,p_reference_id=>4007676303523989775
 );
@@ -4133,6 +4365,8 @@ wwv_flow_api.create_theme_style(
 ,p_theme_id=>42
 ,p_name=>'Vita'
 ,p_is_current=>false
+,p_is_public=>false
+,p_is_accessible=>false
 ,p_theme_roller_input_file_urls=>'#THEME_IMAGES#less/theme/Vita.less'
 ,p_theme_roller_output_file_url=>'#THEME_IMAGES#css/Vita#MIN#.css?v=#APEX_VERSION#'
 ,p_theme_roller_read_only=>true
@@ -4143,6 +4377,8 @@ wwv_flow_api.create_theme_style(
 ,p_theme_id=>42
 ,p_name=>'Vita - Slate'
 ,p_is_current=>true
+,p_is_public=>false
+,p_is_accessible=>false
 ,p_theme_roller_input_file_urls=>'#THEME_IMAGES#less/theme/Vita-Slate.less'
 ,p_theme_roller_config=>'{"customCSS":"","vars":{"@g_Accent-BG":"#505f6d","@g_Accent-OG":"#ececec","@g_Body-Title-BG":"#dee1e4","@l_Link-Base":"#337ac0","@g_Body-BG":"#f5f5f5"}}'
 ,p_theme_roller_output_file_url=>'#THEME_IMAGES#css/Vita-Slate#MIN#.css?v=#APEX_VERSION#'
@@ -7535,7 +7771,7 @@ begin
 null;
 end;
 /
-prompt --application/shared_components/user_interface/shortcuts
+prompt --application/shared_components/user_interface/shortcuts/delete_confirm_msg
 begin
 wwv_flow_api.create_shortcut(
  p_id=>wwv_flow_api.id(27571075944729686341)
@@ -7545,7 +7781,7 @@ wwv_flow_api.create_shortcut(
 );
 end;
 /
-prompt --application/shared_components/security/authentications
+prompt --application/shared_components/security/authentications/application_express_authentication
 begin
 wwv_flow_api.create_authentication(
  p_id=>wwv_flow_api.id(27570911634181648309)
@@ -7555,11 +7791,6 @@ wwv_flow_api.create_authentication(
 ,p_use_secure_cookie_yn=>'N'
 ,p_ras_mode=>0
 );
-end;
-/
-prompt --application/ui_types
-begin
-null;
 end;
 /
 prompt --application/user_interfaces
@@ -7574,11 +7805,14 @@ wwv_flow_api.create_user_interface(
 ,p_theme_id=>42
 ,p_home_url=>'f?p=&APP_ID.:1:&SESSION.'
 ,p_login_url=>'f?p=&APP_ID.:LOGIN_DESKTOP:&SESSION.'
+,p_theme_style_by_user_pref=>false
 ,p_global_page_id=>0
 ,p_navigation_list_id=>wwv_flow_api.id(27570869058603648232)
 ,p_navigation_list_position=>'SIDE'
 ,p_navigation_list_template_id=>wwv_flow_api.id(27570903613967648272)
 ,p_nav_list_template_options=>'#DEFAULT#'
+,p_include_legacy_javascript=>'18'
+,p_include_jquery_migrate=>true
 ,p_nav_bar_type=>'LIST'
 ,p_nav_bar_list_id=>wwv_flow_api.id(27570911308804648302)
 ,p_nav_bar_list_template_id=>wwv_flow_api.id(27570903552878648272)
@@ -7597,38 +7831,36 @@ wwv_flow_api.create_page(
  p_id=>0
 ,p_user_interface_id=>wwv_flow_api.id(27570911420722648303)
 ,p_name=>'Global Page - Desktop'
-,p_page_mode=>'NORMAL'
 ,p_step_title=>'Global Page - Desktop'
+,p_reload_on_submit=>'A'
+,p_warn_on_unsaved_changes=>'N'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
-,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'ON'
 ,p_page_template_options=>'#DEFAULT#'
-,p_dialog_chained=>'Y'
-,p_overwrite_navigation_list=>'N'
-,p_page_is_public_y_n=>'N'
 ,p_protection_level=>'D'
-,p_cache_mode=>'NOCACHE'
-,p_last_updated_by=>'JORGE@RIMBLAS.COM'
-,p_last_upd_yyyymmddhh24miss=>'20160310050706'
+,p_last_updated_by=>'JRIMBLAS'
+,p_last_upd_yyyymmddhh24miss=>'20210214101443'
 );
 wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(24200584930684415915)
 ,p_name=>'Recently Viewed'
 ,p_template=>wwv_flow_api.id(27570885244868648254)
 ,p_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'Y'
 ,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
 ,p_component_template_options=>'#DEFAULT#:t-Report--stretch:t-Report--staticRowColors:t-Report--rowHighlight:t-Report--inline'
 ,p_display_point=>'REGION_POSITION_03'
-,p_source=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_query_type=>'SQL'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select p.product_id, p.product_name',
 'from tk_recent_views r',
 '   , demo_product_info p',
-'where r.page_id = 15',
+'where r.application_id = :APP_ID',
+'  and r.page_id = 15',
 '  and r.view_user = :APP_USER',
 '  and r.entity_id = p.product_id',
 'order by viewed_on desc',
 ''))
-,p_source_type=>'NATIVE_SQL_REPORT'
 ,p_ajax_enabled=>'Y'
 ,p_query_row_template=>wwv_flow_api.id(27570894016141648262)
 ,p_query_headings_type=>'NO_HEADINGS'
@@ -7667,13 +7899,13 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(27570875648508648239)
 ,p_plug_display_sequence=>0
-,p_include_in_reg_disp_sel_yn=>'Y'
 ,p_plug_display_point=>'BODY'
-,p_plug_source=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'begin',
 '  for u in (select view_user, viewed_on',
 '              from tk_current_views',
-'             where page_id = :APP_PAGE_ID',
+'             where application_id = :APP_ID',
+'               and page_id = :APP_PAGE_ID',
 '               and entity_id = tk_recent_views_api.g_entity_pk)',
 '  loop',
 '    htp.p(''Viewed by '' || u.view_user || '' '' || apex_util.get_since(u.viewed_on) );',
@@ -7694,16 +7926,13 @@ wwv_flow_api.create_page(
  p_id=>1
 ,p_user_interface_id=>wwv_flow_api.id(27570911420722648303)
 ,p_name=>'Home'
-,p_page_mode=>'NORMAL'
 ,p_step_title=>'Home'
+,p_reload_on_submit=>'A'
+,p_warn_on_unsaved_changes=>'N'
 ,p_step_sub_title=>'Home'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
-,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'ON'
 ,p_page_template_options=>'#DEFAULT#'
-,p_dialog_chained=>'Y'
-,p_overwrite_navigation_list=>'N'
-,p_page_is_public_y_n=>'N'
-,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'JORGE@RIMBLAS.COM'
 ,p_last_upd_yyyymmddhh24miss=>'20160310151452'
@@ -7716,7 +7945,7 @@ wwv_flow_api.create_page_plug(
 ,p_plug_display_sequence=>10
 ,p_include_in_reg_disp_sel_yn=>'Y'
 ,p_plug_display_point=>'BODY'
-,p_plug_source=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'As you navigate products you''re "Recently Viewed" list on the right column will be updated.  By default, each user keeps 10 elements, but this is configurable via an APEX Preference (<i>TK_RECENT_PAGE_VIEWS</i>).<br>',
 '<br>',
 'The second feature of this demo is when two users are looking at the same product, the second one will see an alert letting them know how long ago the other user pulled up the record. The alert disappears after a configurable amount of time (currentl'
@@ -7732,12 +7961,10 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(27570888548733648256)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'REGION_POSITION_01'
 ,p_menu_id=>wwv_flow_api.id(27570912749236648319)
 ,p_plug_source_type=>'NATIVE_BREADCRUMB'
 ,p_menu_template_id=>wwv_flow_api.id(27570906710636648277)
-,p_plug_query_row_template=>1
 );
 end;
 /
@@ -7747,15 +7974,13 @@ wwv_flow_api.create_page(
  p_id=>10
 ,p_user_interface_id=>wwv_flow_api.id(27570911420722648303)
 ,p_name=>'Products'
-,p_page_mode=>'NORMAL'
 ,p_step_title=>'Products'
+,p_reload_on_submit=>'A'
+,p_warn_on_unsaved_changes=>'N'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
-,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'ON'
 ,p_step_template=>wwv_flow_api.id(27570873598554648238)
 ,p_page_template_options=>'#DEFAULT#'
-,p_overwrite_navigation_list=>'N'
-,p_page_is_public_y_n=>'N'
-,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'DEMO'
 ,p_last_upd_yyyymmddhh24miss=>'20160310050814'
@@ -7766,9 +7991,9 @@ wwv_flow_api.create_page_plug(
 ,p_region_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(27570884709085648254)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'BODY'
-,p_plug_source=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_query_type=>'SQL'
+,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select "PRODUCT_ID", ',
 '"PRODUCT_NAME",',
 '"PRODUCT_DESCRIPTION",',
@@ -7780,7 +8005,6 @@ wwv_flow_api.create_page_plug(
 '  ',
 ''))
 ,p_plug_source_type=>'NATIVE_IR'
-,p_plug_query_row_template=>1
 );
 wwv_flow_api.create_worksheet(
  p_id=>wwv_flow_api.id(27571086527838689504)
@@ -7882,9 +8106,7 @@ wwv_flow_api.create_worksheet_rpt(
 ,p_report_alias=>'275710918'
 ,p_status=>'PUBLIC'
 ,p_is_default=>'Y'
-,p_display_rows=>50
 ,p_report_columns=>'PRODUCT_NAME:CATEGORY:LIST_PRICE'
-,p_flashback_enabled=>'N'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(27571090045401689517)
@@ -7893,12 +8115,10 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(27570888548733648256)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'REGION_POSITION_01'
 ,p_menu_id=>wwv_flow_api.id(27570912749236648319)
 ,p_plug_source_type=>'NATIVE_BREADCRUMB'
 ,p_menu_template_id=>wwv_flow_api.id(27570906710636648277)
-,p_plug_query_row_template=>1
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(27571089411659689512)
@@ -7911,6 +8131,7 @@ wwv_flow_api.create_page_button(
 ,p_button_image_alt=>'Create'
 ,p_button_position=>'RIGHT_OF_IR_SEARCH_BAR'
 ,p_button_redirect_url=>'f?p=&APP_ID.:15:&SESSION.::&DEBUG.:15'
+,p_grid_new_grid=>false
 );
 end;
 /
@@ -7920,18 +8141,16 @@ wwv_flow_api.create_page(
  p_id=>15
 ,p_user_interface_id=>wwv_flow_api.id(27570911420722648303)
 ,p_name=>'Maintain Products'
-,p_page_mode=>'NORMAL'
 ,p_step_title=>'Maintain Products'
+,p_reload_on_submit=>'A'
+,p_warn_on_unsaved_changes=>'N'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
-,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'ON'
 ,p_javascript_code=>'var htmldb_delete_message=''"DELETE_CONFIRM_MSG"'';'
 ,p_inline_css=>'h2#editWarning_heading {display: none;}'
 ,p_step_template=>wwv_flow_api.id(27570873598554648238)
 ,p_page_template_options=>'#DEFAULT#'
-,p_overwrite_navigation_list=>'N'
-,p_page_is_public_y_n=>'N'
 ,p_protection_level=>'C'
-,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'JORGE@RIMBLAS.COM'
 ,p_last_upd_yyyymmddhh24miss=>'20160310050353'
@@ -7942,9 +8161,7 @@ wwv_flow_api.create_page_plug(
 ,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
 ,p_plug_template=>wwv_flow_api.id(27570885244868648254)
 ,p_plug_display_sequence=>0
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'BODY'
-,p_plug_query_row_template=>1
 ,p_attribute_01=>'N'
 ,p_attribute_02=>'TEXT'
 ,p_attribute_03=>'Y'
@@ -7956,12 +8173,10 @@ wwv_flow_api.create_page_plug(
 ,p_component_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(27570888548733648256)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'REGION_POSITION_01'
 ,p_menu_id=>wwv_flow_api.id(27570912749236648319)
 ,p_plug_source_type=>'NATIVE_BREADCRUMB'
 ,p_menu_template_id=>wwv_flow_api.id(27570906710636648277)
-,p_plug_query_row_template=>1
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(27571075179246686339)
@@ -7976,6 +8191,7 @@ wwv_flow_api.create_page_button(
 ,p_button_position=>'REGION_TEMPLATE_CHANGE'
 ,p_button_condition=>'P15_PRODUCT_ID'
 ,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_grid_new_grid=>false
 ,p_database_action=>'UPDATE'
 );
 wwv_flow_api.create_page_button(
@@ -7989,6 +8205,7 @@ wwv_flow_api.create_page_button(
 ,p_button_image_alt=>'Cancel'
 ,p_button_position=>'REGION_TEMPLATE_CLOSE'
 ,p_button_redirect_url=>'f?p=&APP_ID.:10:&SESSION.::&DEBUG.:::'
+,p_grid_new_grid=>false
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(27571075084066686339)
@@ -8003,6 +8220,7 @@ wwv_flow_api.create_page_button(
 ,p_button_position=>'REGION_TEMPLATE_CREATE'
 ,p_button_condition=>'P15_PRODUCT_ID'
 ,p_button_condition_type=>'ITEM_IS_NULL'
+,p_grid_new_grid=>false
 ,p_database_action=>'INSERT'
 );
 wwv_flow_api.create_page_button(
@@ -8019,6 +8237,7 @@ wwv_flow_api.create_page_button(
 ,p_button_execute_validations=>'N'
 ,p_button_condition=>'P15_PRODUCT_ID'
 ,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_grid_new_grid=>false
 ,p_database_action=>'DELETE'
 );
 wwv_flow_api.create_page_branch(
@@ -8166,6 +8385,7 @@ wwv_flow_api.create_page_process(
 ,p_attribute_03=>'P15_PRODUCT_ID'
 ,p_attribute_04=>'PRODUCT_ID'
 ,p_attribute_11=>'I:U:D'
+,p_attribute_12=>'Y'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_success_message=>'Action Processed.'
 );
@@ -8199,17 +8419,15 @@ wwv_flow_api.create_page(
 ,p_user_interface_id=>wwv_flow_api.id(27570911420722648303)
 ,p_name=>'Login Page'
 ,p_alias=>'LOGIN_DESKTOP'
-,p_page_mode=>'NORMAL'
 ,p_step_title=>'Recent Views/Current Views - Log In'
+,p_reload_on_submit=>'A'
+,p_warn_on_unsaved_changes=>'N'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
 ,p_first_item=>'AUTO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'OFF'
 ,p_step_template=>wwv_flow_api.id(27570871051605648236)
 ,p_page_template_options=>'#DEFAULT#'
-,p_dialog_chained=>'Y'
-,p_overwrite_navigation_list=>'N'
 ,p_page_is_public_y_n=>'Y'
-,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'JORGE@RIMBLAS.COM'
 ,p_last_upd_yyyymmddhh24miss=>'20160310223406'
 );
@@ -8219,9 +8437,7 @@ wwv_flow_api.create_page_plug(
 ,p_region_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(27570885053957648254)
 ,p_plug_display_sequence=>10
-,p_include_in_reg_disp_sel_yn=>'N'
 ,p_plug_display_point=>'BODY'
-,p_plug_query_row_template=>1
 ,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 ,p_attribute_01=>'N'
 ,p_attribute_02=>'TEXT'
@@ -8238,6 +8454,7 @@ wwv_flow_api.create_page_button(
 ,p_button_is_hot=>'Y'
 ,p_button_image_alt=>'Sign In'
 ,p_button_position=>'REGION_TEMPLATE_NEXT'
+,p_grid_new_grid=>false
 );
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(27570912024985648316)
@@ -8282,7 +8499,7 @@ wwv_flow_api.create_page_process(
 ,p_process_point=>'AFTER_SUBMIT'
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Set Username Cookie'
-,p_process_sql_clob=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'apex_authentication.send_login_username_cookie (',
 '    p_username => lower(:P101_USERNAME) );'))
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
@@ -8293,7 +8510,7 @@ wwv_flow_api.create_page_process(
 ,p_process_point=>'AFTER_SUBMIT'
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Login'
-,p_process_sql_clob=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'apex_authentication.login(',
 '    p_username => :P101_USERNAME,',
 '    p_password => :P101_PASSWORD );'))
@@ -8320,12 +8537,9 @@ end;
 /
 prompt --application/deployment/definition
 begin
-null;
-end;
-/
-prompt --application/deployment/install
-begin
-null;
+wwv_flow_api.create_install(
+ p_id=>wwv_flow_api.id(15132107079787990)
+);
 end;
 /
 prompt --application/deployment/checks

@@ -22,6 +22,16 @@ begin
 end user_recent_views;
 
 
+--------------------------------------------------------------------------------
+--*
+--*  Get the entity being looked at by a user
+--*
+--------------------------------------------------------------------------------
+function get_entity_pk return number
+is
+begin
+  return g_entity_pk;
+end get_entity_pk;
 
 
 --------------------------------------------------------------------------------
@@ -45,7 +55,8 @@ begin
           (select id
              from (select id, dense_rank() over (order by viewed_on desc) dr
                      from tk_recent_views
-                    where view_user = p_user
+                    where application_id = g_app_id
+                      and view_user = p_user
                   )
             where dr > n)
      and view_user = p_user;
@@ -67,20 +78,20 @@ function page_in_current_view (
 )
 return boolean
 is
+  i int;
 begin
 
-/*
-  <<<< CHANGE THE LIST OF PAGES IN THIS FUNCTION AS NEEDED
-  Pages Monitored
-  ----------------------------------------
-  210 - Claims
-  310 - Clients
-  365 - Providers
-  510 - Rules
-  810 - Cases
-*/
-  return p_page_id in (210, 310, 365, 510, 810);
+  select 1
+    into i
+    from tk_current_view_tracking
+   where application_id = g_app_id
+     and page_id = p_page_id;
 
+  return true;
+
+exception
+  when NO_DATA_FOUND then
+    return false;
 end page_in_current_view;
 
 
@@ -89,7 +100,8 @@ end page_in_current_view;
 
 --------------------------------------------------------------------------------
 --*
---* Purge old entries in the current viewed list older than c_interval
+--* Purge old entries, for a user (but by application), in the current
+--* viewed list older than c_interval
 --*
 --------------------------------------------------------------------------------
 procedure remove_old_current_views (
@@ -101,7 +113,8 @@ begin
 
   -- remove all user page views older than c_interval
   delete from tk_current_views
-   where view_user = p_user
+   where application_id = g_app_id
+     and view_user = p_user
      and (viewed_on + c_interval) < sysdate;
 
 end remove_old_current_views;
@@ -145,14 +158,15 @@ begin
                           -- keep the same viewed on
                           viewed_on
                         end
-         , view_user = case
+          , view_user = case
                         when view_user <> p_user and (viewed_on + c_interval) < l_now then
                           -- it's been long enough, change ownership
                           p_user
                         else
                           view_user
                         end
-     where page_id   = p_page_id
+     where application_id = g_app_id
+       and page_id   = p_page_id
        and entity_id = p_entity_id
      returning view_user into g_user;
 
@@ -160,12 +174,14 @@ begin
     if SQL%ROWCOUNT = 0 then
       -- if the page_id and entity was not in the list we add it.
       insert into tk_current_views (
-          page_id
+          application_id
+        , page_id
         , entity_id
         , viewed_on
         , view_user
       ) values (
-          p_page_id
+          g_app_id
+        , p_page_id
         , p_entity_id
         , l_now
         , p_user
@@ -205,19 +221,22 @@ begin
   -- touching page_id for p_user, this will make it jump to the top.
   update tk_recent_views
      set viewed_on = sysdate
-   where view_user = p_user
+   where application_id = g_app_id
+     and view_user = p_user
      and page_id = p_page_id
      and nvl(entity_id,-1) = nvl(p_entity_id, -1);
 
   if SQL%ROWCOUNT = 0 then
     -- if the page_id and entity was not in the list we add it.
     insert into tk_recent_views (
-        view_user
+        application_id
+      , view_user
       , page_id
       , entity_id
       , viewed_on
     ) values (
-        p_user
+        g_app_id
+      , p_user
       , p_page_id
       , p_entity_id
       , sysdate
@@ -233,7 +252,9 @@ begin
 end touch;
 
 
+begin
 
+  g_app_id := nv('APP_ID');
 
 end tk_recent_views_api;
 /
